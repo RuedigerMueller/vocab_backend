@@ -13,5 +13,5 @@ jobs:
           key: vocab_backend{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
-      - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+      - run: npm run test
       #- run: npm run test:e2e
