@@ -14,4 +14,4 @@ jobs:
           paths:
             - "node_modules"
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
-      - run: npm run test:e2e
+      #- run: npm run test:e2e
