@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+   heroku: circleci/heroku@1.0.1 
+
 jobs:
   build:
     working_directory: ~/vocab_backend
