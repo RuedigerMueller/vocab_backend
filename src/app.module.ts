@@ -5,8 +5,13 @@ import { VocabulariesModule } from './vocabularies/vocabularies.module';
 import { LessonsModule } from './lessons/lessons.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), VocabulariesModule, LessonsModule],
+  imports: [
+    TypeOrmModule.forRoot(), 
+    VocabulariesModule, 
+    LessonsModule
+  ],
 })
+
 export class AppModule {
   constructor(private connection: Connection) {}
 }

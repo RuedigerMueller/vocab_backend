@@ -5,6 +5,6 @@
     "synchronize": true,
     "migrations": ["migration/*.js"],
     "cli": {
-        "migrationsDir": "migration"
+        "migrationsDir": "src/migration"
     }
 }
