@@ -28,7 +28,7 @@ export class VocabulariesController {
     return this._vocabulariesService.findOne(id);
   }
 
-  @Get('/lesson/:id/vocabulary')
+  @Get('/lessons/:id/vocabulary')
   async getLessonVocabulary(@Param('id') id: string): Promise<Vocabulary[]> {
       return this._vocabulariesService.getLessonVocabulary(id);
   }
