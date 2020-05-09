@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { VocabulariesService } from './vocabularies.service';
+import { VocabularyController } from './vocabulary.controller';
+import { VocabularyService } from './vocabulary.service';
 import { Vocabulary } from './vocabulary.entity';
 import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
-import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import {
   initialVocabularyRepository,
   addVocabulary,
@@ -12,19 +12,21 @@ import {
   unknownVocabulary,
   updateVocabulary_LevelTooHighTest,
   updateVocabulary_LevelTooLowTest,
-} from './vocabularies.test.data';
+} from './vocabulary.test.data';
+import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
-import { LessonsService } from '../lessons/lessons.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
+import { LessonsService } from '../lessons/lessons.service';
 
-describe('VocabulariesService', () => {
-  let service: VocabulariesService;
+describe('Vocabularies Controller', () => {
+  let controller: VocabularyController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [VocabularyController],
       providers: [
-        VocabulariesService,
+        VocabularyService,
         {
           provide: getRepositoryToken(Vocabulary),
           useClass: VocabularyRepositoryMock,
@@ -37,19 +39,19 @@ describe('VocabulariesService', () => {
       ],
     }).compile();
 
-    service = module.get<VocabulariesService>(VocabulariesService);
+    controller = module.get<VocabularyController>(VocabularyController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   describe('findAll', () => {
-    it('should return an array of vocabularies', async () => {
+    it('should find vocabularies', async () => {
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
         obj => ({ ...obj }),
       );
-      const result = await service.findAll();
+      const result = await controller.findAll();
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -61,11 +63,11 @@ describe('VocabulariesService', () => {
       const expected_result: Vocabulary = initialVocabularyRepository.find(
         vocab => vocab.id === 2,
       );
-      expect(await service.findOne('2')).toEqual(expected_result);
+      expect(await controller.findOne('2')).toEqual(expected_result);
     });
 
     it('should be undefined if the id does not exist', async () => {
-      expect(await service.findOne('0')).toBeUndefined();
+      expect(await controller.findOne('0')).toBeUndefined();
     });
   });
 
@@ -82,21 +84,21 @@ describe('VocabulariesService', () => {
         },
       );
 
-      const entries_before = await (await service.findAll()).length;
-      await service.remove('2');
+      const entries_before = await (await controller.findAll()).length;
+      await controller.remove('2');
 
-      const after_remove: Array<Vocabulary> = await service.findAll();
+      const after_remove: Array<Vocabulary> = await controller.findAll();
       expect(after_remove).toEqual(expected_result);
       expect(after_remove.length).toEqual(entries_before - 1);
-      expect(await service.findOne('2')).toBeUndefined();
+      expect(await controller.findOne('2')).toBeUndefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
         obj => ({ ...obj }),
       );
-      await service.remove('0');
-      expect(await service.findAll()).toEqual(expected_result);
+      await controller.remove('0');
+      expect(await controller.findAll()).toEqual(expected_result);
     });
   });
 
@@ -104,18 +106,13 @@ describe('VocabulariesService', () => {
     it('should add the vocabulary to the repository', async () => {
       const vocab: CreateVocabularyDto = {
         language_a: addVocabulary.language_a,
-        language_b: addVocabulary.language_b,
+        language_b: addVocabulary.language_a,
         lesson: addVocabulary.lesson.id,
       };
 
-      const vocabulary: Vocabulary = await service.create(vocab);
-      expect(vocabulary.language_a).toEqual(addVocabulary.language_a);
-      expect(vocabulary.language_b).toEqual(addVocabulary.language_b);
-      expect(vocabulary.dueDate).toEqual(addVocabulary.dueDate);
-      expect(vocabulary.level).toEqual(addVocabulary.level);
+      await controller.create(vocab);
 
-      const allVocabularies = await service.findAll();
-      //Todo: Improve search
+      const allVocabularies = await controller.findAll();
       const searchResult: Vocabulary = allVocabularies.find(
         vocab => vocab.language_a === addVocabulary.language_a,
       );
@@ -124,19 +121,6 @@ describe('VocabulariesService', () => {
   });
 
   describe('update', () => {
-    const updateCheck = async (update: Vocabulary) => {
-      const allVocabularies = await service.findAll();
-      const searchResult: Vocabulary = allVocabularies.find(
-        vocab => vocab.id === update.id,
-      );
-      expect(searchResult).toBeDefined();
-      expect(searchResult.id).toBe(update.id);
-      expect(searchResult.language_a).toBe(update.language_a);
-      expect(searchResult.language_b).toBe(update.language_b);
-      expect(searchResult.level).toBe(update.level);
-      expect(searchResult.dueDate).toStrictEqual(update.dueDate);
-    };
-
     it('should update the vocabulary', async () => {
       const vocab: UpdateVocabularyDto = {
         language_a: updateVocabulary.language_a,
@@ -144,52 +128,17 @@ describe('VocabulariesService', () => {
         level: updateVocabulary.level,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
-      updateCheck(updateVocabulary);
-    });
-
-    it('should update the vocabulary with partial information - language_a empty', async () => {
-      const vocab: UpdateVocabularyDto = {
-        language_a: '',
-        language_b: updateVocabulary.language_b,
-        level: updateVocabulary.level,
-      };
-
-      await service.update(updateVocabulary.id.toString(), vocab);
-      updateCheck(updateVocabulary);
-    });
-
-    it('should update the vocabulary with partial information - language_a & b empty', async () => {
-      const vocab: UpdateVocabularyDto = {
-        language_a: '',
-        language_b: '',
-        level: updateVocabulary.level,
-      };
-
-      await service.update(updateVocabulary.id.toString(), vocab);
-      updateCheck(updateVocabulary);
-    });
-
-    it('should gracefully handle attempts to set the level above', async () => {
-      const vocab: UpdateVocabularyDto = {
-        language_a: updateVocabulary_LevelTooHighTest.language_a,
-        language_b: updateVocabulary_LevelTooHighTest.language_b,
-        level: updateVocabulary_LevelTooHighTest.level + 1,
-      };
-
-      await service.update(updateVocabulary.id.toString(), vocab);
-      updateCheck(updateVocabulary_LevelTooHighTest);
-    });
-
-    it('should gracefully handle attempts to set the level above', async () => {
-      const vocab: UpdateVocabularyDto = {
-        language_a: updateVocabulary_LevelTooLowTest.language_a,
-        language_b: updateVocabulary_LevelTooLowTest.language_b,
-        level: updateVocabulary_LevelTooLowTest.level - 1,
-      };
-
-      await service.update(updateVocabulary.id.toString(), vocab);
-      updateCheck(updateVocabulary_LevelTooLowTest);
+      await controller.update(updateVocabulary.id.toString(), vocab);
+      const allVocabularies = await controller.findAll();
+      const searchResult: Vocabulary = allVocabularies.find(
+        vocab => vocab.id === updateVocabulary.id,
+      );
+      expect(searchResult).toBeDefined();
+      expect(searchResult.id).toBe(updateVocabulary.id);
+      expect(searchResult.language_a).toBe(updateVocabulary.language_a);
+      expect(searchResult.language_b).toBe(updateVocabulary.language_b);
+      expect(searchResult.level).toBe(updateVocabulary.level);
+      expect(searchResult.dueDate).toStrictEqual(updateVocabulary.dueDate);
     });
   });
 
@@ -200,8 +149,8 @@ describe('VocabulariesService', () => {
       expected_result.level = expected_result.level + 1;
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
 
-      await service.vocabKnown(knownVocabulary.id.toString());
-      const result = await service.findOne(knownVocabulary.id.toString());
+      await controller.vocabKnown(knownVocabulary.id.toString());
+      const result = await controller.findOne(knownVocabulary.id.toString());
 
       expect(result).toMatchObject(expected_result);
       expect(result.dueDate).toEqual(expected_result.dueDate);
@@ -210,8 +159,8 @@ describe('VocabulariesService', () => {
     it('should not go above level 7', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooHighTest);
-      await service.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString());
-      const result = await service.findOne(
+      await controller.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString());
+      const result = await controller.findOne(
         updateVocabulary_LevelTooHighTest.id.toString(),
       );
 
@@ -227,8 +176,8 @@ describe('VocabulariesService', () => {
       expected_result.level = expected_result.level - 1;
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() - 1);
 
-      await service.vocabUnknown(unknownVocabulary.id.toString());
-      const result = await service.findOne(unknownVocabulary.id.toString());
+      await controller.vocabUnknown(unknownVocabulary.id.toString());
+      const result = await controller.findOne(unknownVocabulary.id.toString());
 
       expect(result).toEqual(expected_result);
     });
@@ -236,10 +185,10 @@ describe('VocabulariesService', () => {
     it('should not go below level 1', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooLowTest);
-      await service.vocabUnknown(
+      await controller.vocabUnknown(
         updateVocabulary_LevelTooLowTest.id.toString(),
       );
-      const result = await service.findOne(
+      const result = await controller.findOne(
         updateVocabulary_LevelTooLowTest.id.toString(),
       );
 

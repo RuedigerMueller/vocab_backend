@@ -9,14 +9,14 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { VocabulariesService } from './vocabularies.service';
+import { VocabularyService } from './vocabulary.service';
 import { Vocabulary } from './vocabulary.entity';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 
 @Controller()
-export class VocabulariesController {
-  constructor(private _vocabulariesService: VocabulariesService) {}
+export class VocabularyController {
+  constructor(private _vocabulariesService: VocabularyService) {}
 
   @Get('/vocabulary')
   async findAll(): Promise<Vocabulary[]> {

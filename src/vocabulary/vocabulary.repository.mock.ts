@@ -2,7 +2,7 @@ import { Vocabulary } from './vocabulary.entity';
 import {
   initialVocabularyRepository,
   addVocabulary,
-} from './vocabularies.test.data';
+} from './vocabulary.test.data';
 import { FindManyOptions } from 'typeorm';
 
 export class VocabularyRepositoryMock {

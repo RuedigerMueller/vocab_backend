@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { VocabulariesModule } from './vocabularies/vocabularies.module';
+import { VocabulariesModule } from './vocabulary/vocabulary.module';
 import { LessonsModule } from './lessons/lessons.module';
 
 @Module({

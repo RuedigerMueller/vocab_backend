@@ -7,7 +7,7 @@ import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { LessonsService } from '../lessons/lessons.service';
 
 @Injectable()
-export class VocabulariesService {
+export class VocabularyService {
   constructor(
     @InjectRepository(Vocabulary)
     private _vocabulariesRepository: Repository<Vocabulary>,

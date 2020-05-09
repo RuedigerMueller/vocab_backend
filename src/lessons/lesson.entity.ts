@@ -6,7 +6,7 @@ import {
   OneToMany,
   AfterLoad,
 } from 'typeorm';
-import { Vocabulary } from '../vocabularies/vocabulary.entity';
+import { Vocabulary } from '../vocabulary/vocabulary.entity';
 
 @Entity()
 export class Lesson {

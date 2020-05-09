@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { VocabulariesController } from './vocabularies.controller';
-import { VocabulariesService } from './vocabularies.service';
+
+import { VocabularyService } from './vocabulary.service';
 import { Vocabulary } from './vocabulary.entity';
 import { LessonsService } from '../lessons/lessons.service';
 import { Lesson } from '../lessons/lesson.entity';
+import { VocabularyController } from './vocabulary.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vocabulary, Lesson])],
-  controllers: [VocabulariesController],
-  providers: [VocabulariesService, LessonsService],
+  controllers: [VocabularyController],
+  providers: [VocabularyService, LessonsService],
 })
 export class VocabulariesModule {}
