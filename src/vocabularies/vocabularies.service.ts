@@ -76,4 +76,8 @@ export class VocabulariesService {
 
     await this._vocabulariesRepository.update(id, vocabulary);
   }
+
+  async getLessonVocabulary(id: string): Promise<Vocabulary[]> {
+    return this._vocabulariesRepository.find({ where: { lesson: id } });
+  }
 }
