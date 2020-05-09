@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 import { VocabularyService } from './vocabulary.service';
 import { Vocabulary } from './vocabulary.entity';
@@ -54,7 +55,7 @@ export class VocabularyController {
     return this._vocabulariesService.vocabUnknown(id);
   }
 
-  @Put('/vocabulary/:id')
+  @Patch('/vocabulary/:id')
   @UsePipes(ValidationPipe)
   update(
     @Param('id') id: string,
