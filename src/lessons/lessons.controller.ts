@@ -29,7 +29,7 @@ export class LessonsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this._lessonsService.remove(id);
   }
 
