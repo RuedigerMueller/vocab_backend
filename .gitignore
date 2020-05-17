@@ -3,3 +3,4 @@ dist
 test.db
 .env
 .env_backup
+coverage
