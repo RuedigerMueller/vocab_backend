@@ -34,6 +34,11 @@ export class VocabularyController {
       return this._vocabulariesService.getLessonVocabulary(id);
   }
 
+  @Get('/lessons/:id/dueLessonVocabulary')
+  async getDueLessonVocabulary(@Param('id') id: string): Promise<Vocabulary[]> {
+      return this._vocabulariesService.getDueLessonVocabulary(id);
+  }
+
   @Delete('/vocabulary/:id')
   remove(@Param('id') id: string) {
     return this._vocabulariesService.remove(id);

@@ -80,4 +80,8 @@ export class VocabularyService {
   async getLessonVocabulary(id: string): Promise<Vocabulary[]> {
     return this._vocabulariesRepository.find({ where: { lesson: id } });
   }
+
+  async getDueLessonVocabulary(id: string): Promise<Vocabulary[]> {
+    return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
+  }
 }

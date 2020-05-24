@@ -247,4 +247,60 @@ describe('VocabulariesService', () => {
       expect(result.dueDate).toEqual(expected_result.dueDate);
     });
   });
+
+  describe('getLessonVocabulary', () => {
+    it('should return all the Lesson Vocabulary', async () => {
+      const testLessonID: number = initialVocabularyRepository[0].lesson.id;
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
+        (vocabulary: Vocabulary) => {
+          if (vocabulary.lesson.id === testLessonID) return vocabulary;
+        }
+      );
+      const result = await service.getLessonVocabulary(testLessonID.toString());
+
+      expect(result).toEqual(expected_result);
+      expect(result.length).toBe(expected_result.length);
+    });
+
+    it('should only return vocabulary for the lesson', async() => {
+      const testLessonID: number = initialVocabularyRepository[0].lesson.id;
+      const result = await service.getLessonVocabulary(testLessonID.toString());
+      const expected_result: Array<Vocabulary> = result.map(
+        (vocabulary: Vocabulary) => {
+          if (vocabulary.lesson.id === testLessonID) return vocabulary;
+        }
+      );
+
+      expect(result.length).toBe(expected_result.length);
+    });
+  });
+
+  describe('getDueLessonVocabulary', () => {
+    xit('should return the same number of vocabularies as there are due vocabularies', async () => {
+      const testLessonID: number = initialVocabularyRepository[0].lesson.id;
+      const currentDate = new Date();
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
+        (vocabulary: Vocabulary) => {
+          if (vocabulary.dueDate <= currentDate) return vocabulary;
+        }
+      );
+      const result = await service.getDueLessonVocabulary(testLessonID.toString());
+
+      expect(result).toEqual(expected_result);
+      expect(result.length).toBe(expected_result.length);
+    })
+
+    it('should only return due vocabularies', async () => {
+      const testLessonID: number = initialVocabularyRepository[0].lesson.id;
+      const currentDate = new Date();
+      const result = await service.getDueLessonVocabulary(testLessonID.toString());
+      const expected_result: Array<Vocabulary> = result.map(
+        (vocabulary: Vocabulary) => {
+          if ((vocabulary.dueDate <= currentDate) && (vocabulary.lesson.id === testLessonID)) return vocabulary;
+        }
+      );
+      
+      expect(result.length).toBe(expected_result.length);
+    });
+  });
 });
