@@ -33,6 +33,7 @@ export class VocabularyService {
     vocabulary.language_b = createVocabularyDto.language_b;
     vocabulary.level = 1;
     vocabulary.dueDate = new Date();
+    // vocabulary.dueDate = new Date(2021,12,30);
     vocabulary.dueDate.setHours(0,0,0,0);
     vocabulary.lesson = await this._lessonsService.findOne(
       createVocabularyDto.lesson.toString(),
@@ -82,6 +83,11 @@ export class VocabularyService {
   }
 
   async getDueLessonVocabulary(id: string): Promise<Vocabulary[]> {
-    return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
+    // return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
+    const currentDate = new Date();
+    const lessonVocabulary: ReadonlyArray<Vocabulary> = await this.getLessonVocabulary(id);
+    return lessonVocabulary.filter( vocab => {
+      return vocab.dueDate < currentDate;
+    });
   }
 }

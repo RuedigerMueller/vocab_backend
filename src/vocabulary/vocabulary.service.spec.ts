@@ -251,7 +251,7 @@ describe('VocabulariesService', () => {
   describe('getLessonVocabulary', () => {
     it('should return all the Lesson Vocabulary', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         (vocabulary: Vocabulary) => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
         }
@@ -265,7 +265,7 @@ describe('VocabulariesService', () => {
     it('should only return vocabulary for the lesson', async() => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const result = await service.getLessonVocabulary(testLessonID.toString());
-      const expected_result: Array<Vocabulary> = result.map(
+      const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
         }
@@ -279,7 +279,7 @@ describe('VocabulariesService', () => {
     xit('should return the same number of vocabularies as there are due vocabularies', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const currentDate = new Date();
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         (vocabulary: Vocabulary) => {
           if (vocabulary.dueDate <= currentDate) return vocabulary;
         }
@@ -294,7 +294,7 @@ describe('VocabulariesService', () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const currentDate = new Date();
       const result = await service.getDueLessonVocabulary(testLessonID.toString());
-      const expected_result: Array<Vocabulary> = result.map(
+      const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if ((vocabulary.dueDate <= currentDate) && (vocabulary.lesson.id === testLessonID)) return vocabulary;
         }
