@@ -197,7 +197,7 @@ describe('Vocabularies Controller', () => {
       expected_result.level = expected_result.level - 1;
       expected_result.dueDate = new Date();
       expected_result.dueDate.setHours(0,0,0,0);
-      expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);w
+      expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
 
       await controller.vocabUnknown(unknownVocabulary.id.toString());
       const result = await controller.findOne(unknownVocabulary.id.toString());
