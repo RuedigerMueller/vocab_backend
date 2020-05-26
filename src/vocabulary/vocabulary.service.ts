@@ -12,7 +12,7 @@ export class VocabularyService {
     @InjectRepository(Vocabulary)
     private _vocabulariesRepository: Repository<Vocabulary>,
     private _lessonsService: LessonsService,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Vocabulary[]> {
     return this._vocabulariesRepository.find();
@@ -34,7 +34,7 @@ export class VocabularyService {
     vocabulary.level = 1;
     vocabulary.dueDate = new Date();
     // vocabulary.dueDate = new Date(2021,12,30);
-    vocabulary.dueDate.setHours(0,0,0,0);
+    vocabulary.dueDate.setHours(0, 0, 0, 0);
     vocabulary.lesson = await this._lessonsService.findOne(
       createVocabularyDto.lesson.toString(),
     );
@@ -60,33 +60,33 @@ export class VocabularyService {
 
   async vocabKnown(id: string): Promise<void> {
     const vocabulary = await this.findOne(id);
-    if (vocabulary.level < 6) {
-      vocabulary.level += 1;
 
-      let nextDueIn: number;
-      switch (vocabulary.level) {
-        case 2:
-          nextDueIn = 1;
-        case 3:
-          nextDueIn = 2;
-        case 4:
-          nextDueIn = 5;
-        case 5:
-          nextDueIn = 10;
-        case 6:
-          nextDueIn = 30;
-        case 7:
-          nextDueIn = 80;
-        default:
-          nextDueIn = 1;
-      }
-      if (vocabulary.level !== 8) {
-        vocabulary.dueDate = new Date();
-        vocabulary.dueDate.setHours(0,0,0,0);
-        vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);
-      } else {
-        vocabulary.dueDate = new Date(9999,12,31);
-      }
+    vocabulary.level += 1;
+
+    let nextDueIn: number;
+    switch (vocabulary.level) {
+      case 2:
+        nextDueIn = 1;
+      case 3:
+        nextDueIn = 2;
+      case 4:
+        nextDueIn = 5;
+      case 5:
+        nextDueIn = 10;
+      case 6:
+        nextDueIn = 30;
+      case 7:
+        nextDueIn = 80;
+      default:
+        nextDueIn = 1;
+    }
+    if (vocabulary.level !== 8) {
+      vocabulary.dueDate = new Date();
+      vocabulary.dueDate.setHours(0, 0, 0, 0);
+      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);
+    } else {
+      vocabulary.level = 7;
+      vocabulary.dueDate = new Date(9999, 12, 31);
     }
 
     await this._vocabulariesRepository.update(id, vocabulary);
@@ -97,7 +97,7 @@ export class VocabularyService {
     if (vocabulary.level > 1) {
       vocabulary.level -= 1;
       vocabulary.dueDate = new Date();
-      vocabulary.dueDate.setHours(0,0,0,0);
+      vocabulary.dueDate.setHours(0, 0, 0, 0);
       vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + 1);
     }
 
@@ -112,7 +112,7 @@ export class VocabularyService {
     // return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
     const currentDate = new Date();
     const lessonVocabulary: ReadonlyArray<Vocabulary> = await this.getLessonVocabulary(id);
-    return lessonVocabulary.filter( vocab => {
+    return lessonVocabulary.filter(vocab => {
       return vocab.dueDate < currentDate;
     });
   }

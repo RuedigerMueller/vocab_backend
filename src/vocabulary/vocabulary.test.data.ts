@@ -37,7 +37,7 @@ initialVocabularyRepository = initialVocabularyRepository.concat(
   createVocabulary(4, 'city', 'Stadt', 1, new Date(9999, 12, 31), lesson),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(5, 'car', 'Auto', 7, new Date(9999, 12, 31), lesson),
+  createVocabulary(5, 'car', 'Auto', 7, new Date(2020, 3, 1), lesson),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
   createVocabulary(6, 'sausage', 'Wurst', 1, new Date(9999, 12, 31), lesson),

@@ -197,8 +197,28 @@ describe('VocabulariesService', () => {
     it('should update the vocabulary', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, knownVocabulary);
-      expected_result.level = expected_result.level + 1;
-      expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
+      expected_result.level += 1;
+      
+      let nextDueIn: number;
+      switch (expected_result.level) {
+        case 2:
+          nextDueIn = 1;
+        case 3:
+          nextDueIn = 2;
+        case 4:
+          nextDueIn = 5;
+        case 5:
+          nextDueIn = 10;
+        case 6:
+          nextDueIn = 30;
+        case 7:
+          nextDueIn = 80;
+        default:
+          nextDueIn = 1;
+      }
+      expected_result.dueDate = new Date();
+      expected_result.dueDate.setHours(0,0,0,0);
+      expected_result.dueDate.setDate(expected_result.dueDate.getDate() + nextDueIn);
 
       await service.vocabKnown(knownVocabulary.id.toString());
       const result = await service.findOne(knownVocabulary.id.toString());
@@ -210,6 +230,7 @@ describe('VocabulariesService', () => {
     it('should not go above level 7', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooHighTest);
+      expected_result.dueDate = new Date(9999,12,31);
       await service.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString());
       const result = await service.findOne(
         updateVocabulary_LevelTooHighTest.id.toString(),
@@ -225,7 +246,9 @@ describe('VocabulariesService', () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, unknownVocabulary);
       expected_result.level = expected_result.level - 1;
-      expected_result.dueDate.setDate(expected_result.dueDate.getDate() - 1);
+      expected_result.dueDate = new Date();
+      expected_result.dueDate.setHours(0,0,0,0);
+      expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
 
       await service.vocabUnknown(unknownVocabulary.id.toString());
       const result = await service.findOne(unknownVocabulary.id.toString());
