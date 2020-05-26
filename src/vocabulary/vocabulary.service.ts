@@ -62,7 +62,31 @@ export class VocabularyService {
     const vocabulary = await this.findOne(id);
     if (vocabulary.level < 6) {
       vocabulary.level += 1;
-      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + 1);
+
+      let nextDueIn: number;
+      switch (vocabulary.level) {
+        case 2:
+          nextDueIn = 1;
+        case 3:
+          nextDueIn = 2;
+        case 4:
+          nextDueIn = 5;
+        case 5:
+          nextDueIn = 10;
+        case 6:
+          nextDueIn = 30;
+        case 7:
+          nextDueIn = 80;
+        default:
+          nextDueIn = 1;
+      }
+      if (vocabulary.level !== 8) {
+        vocabulary.dueDate = new Date();
+        vocabulary.dueDate.setHours(0,0,0,0);
+        vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);
+      } else {
+        vocabulary.dueDate = new Date(9999,12,31);
+      }
     }
 
     await this._vocabulariesRepository.update(id, vocabulary);
@@ -72,7 +96,9 @@ export class VocabularyService {
     const vocabulary = await this.findOne(id);
     if (vocabulary.level > 1) {
       vocabulary.level -= 1;
-      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() - 1);
+      vocabulary.dueDate = new Date();
+      vocabulary.dueDate.setHours(0,0,0,0);
+      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + 1);
     }
 
     await this._vocabulariesRepository.update(id, vocabulary);
