@@ -17,9 +17,11 @@ import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { LessonsService } from '../lessons/lessons.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 describe('VocabulariesService', () => {
   let service: VocabularyService;
+  let configuration : ConfigurationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,10 +36,12 @@ describe('VocabulariesService', () => {
           provide: getRepositoryToken(Lesson),
           useClass: LessonRepositoryMock,
         },
+        ConfigurationService,
       ],
     }).compile();
 
     service = module.get<VocabularyService>(VocabularyService);
+    configuration = module.get<ConfigurationService>(ConfigurationService);
   });
 
   it('should be defined', () => {
@@ -199,23 +203,8 @@ describe('VocabulariesService', () => {
       expected_result = Object.assign({}, knownVocabulary);
       expected_result.level += 1;
       
-      let nextDueIn: number;
-      switch (expected_result.level) {
-        case 2:
-          nextDueIn = 1;
-        case 3:
-          nextDueIn = 2;
-        case 4:
-          nextDueIn = 5;
-        case 5:
-          nextDueIn = 10;
-        case 6:
-          nextDueIn = 30;
-        case 7:
-          nextDueIn = 80;
-        default:
-          nextDueIn = 1;
-      }
+      const nextDueIn: number = configuration.getDueInDays(expected_result.level);
+
       expected_result.dueDate = new Date();
       expected_result.dueDate.setHours(0,0,0,0);
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + nextDueIn);

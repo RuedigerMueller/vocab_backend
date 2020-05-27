@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual } from 'typeorm';
-import { Vocabulary } from './vocabulary.entity';
+import { Repository } from 'typeorm';
+import { LessonsService } from '../lessons/lessons.service';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
-import { LessonsService } from '../lessons/lessons.service';
+import { Vocabulary } from './vocabulary.entity';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Injectable()
 export class VocabularyService {
@@ -12,6 +13,7 @@ export class VocabularyService {
     @InjectRepository(Vocabulary)
     private _vocabulariesRepository: Repository<Vocabulary>,
     private _lessonsService: LessonsService,
+    private _configurationService: ConfigurationService
   ) { }
 
   async findAll(): Promise<Vocabulary[]> {
@@ -63,24 +65,9 @@ export class VocabularyService {
 
     vocabulary.level += 1;
 
-    let nextDueIn: number;
-    switch (vocabulary.level) {
-      case 2:
-        nextDueIn = 1;
-      case 3:
-        nextDueIn = 2;
-      case 4:
-        nextDueIn = 5;
-      case 5:
-        nextDueIn = 10;
-      case 6:
-        nextDueIn = 30;
-      case 7:
-        nextDueIn = 80;
-      default:
-        nextDueIn = 1;
-    }
-    if (vocabulary.level !== 8) {
+    const nextDueIn: number = this._configurationService.getDueInDays(vocabulary.level);
+    
+    if (vocabulary.level < 7) {
       vocabulary.dueDate = new Date();
       vocabulary.dueDate.setHours(0, 0, 0, 0);
       vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);

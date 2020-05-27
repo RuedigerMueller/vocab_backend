@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { VocabulariesModule } from './vocabulary/vocabulary.module';
 import { LessonsModule } from './lessons/lessons.module';
+import { ConfigurationService } from './configuration/configuration.service';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { LessonsModule } from './lessons/lessons.module';
     VocabulariesModule, 
     LessonsModule
   ],
+  providers: [ConfigurationService],
 })
 
 export class AppModule {
