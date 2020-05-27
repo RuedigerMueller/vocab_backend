@@ -52,9 +52,7 @@ describe('Vocabularies Controller', () => {
 
   describe('findAll', () => {
     it('should find vocabularies', async () => {
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
-        obj => ({ ...obj }),
-      );
+      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
       const result = await controller.findAll();
 
       expect(result).toEqual(expected_result);
@@ -98,9 +96,8 @@ describe('Vocabularies Controller', () => {
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
-        obj => ({ ...obj }),
-      );
+      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      
       await controller.remove('0');
       expect(await controller.findAll()).toEqual(expected_result);
     });

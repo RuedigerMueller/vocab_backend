@@ -1,23 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { VocabularyService } from './vocabulary.service';
-import { Vocabulary } from './vocabulary.entity';
-import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
-import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
-import {
-  initialVocabularyRepository,
-  addVocabulary,
-  updateVocabulary,
-  knownVocabulary,
-  unknownVocabulary,
-  updateVocabulary_LevelTooHighTest,
-  updateVocabulary_LevelTooLowTest,
-} from './vocabulary.test.data';
-import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
-import { LessonsService } from '../lessons/lessons.service';
+import { ConfigurationService } from '../configuration/configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
-import { ConfigurationService } from '../configuration/configuration.service';
+import { LessonsService } from '../lessons/lessons.service';
+import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
+import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { Vocabulary } from './vocabulary.entity';
+import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
+import { VocabularyService } from './vocabulary.service';
+import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
 
 describe('VocabulariesService', () => {
   let service: VocabularyService;
@@ -48,11 +40,11 @@ describe('VocabulariesService', () => {
     expect(service).toBeDefined();
   });
 
+  
   describe('findAll', () => {
     it('should return an array of vocabularies', async () => {
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
-        obj => ({ ...obj }),
-      );
+      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      
       const result = await service.findAll();
 
       expect(result).toEqual(expected_result);
@@ -96,9 +88,7 @@ describe('VocabulariesService', () => {
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: Array<Vocabulary> = initialVocabularyRepository.map(
-        obj => ({ ...obj }),
-      );
+      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
       await service.remove('0');
       expect(await service.findAll()).toEqual(expected_result);
     });
