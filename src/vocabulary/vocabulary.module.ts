@@ -6,10 +6,11 @@ import { Vocabulary } from './vocabulary.entity';
 import { LessonsService } from '../lessons/lessons.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { VocabularyController } from './vocabulary.controller';
+import { ConfigurationService } from 'src/configuration/configuration.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vocabulary, Lesson])],
   controllers: [VocabularyController],
-  providers: [VocabularyService, LessonsService],
+  providers: [VocabularyService, LessonsService, ConfigurationService], 
 })
 export class VocabulariesModule {}

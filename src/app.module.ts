@@ -4,14 +4,19 @@ import { Connection } from 'typeorm';
 import { VocabulariesModule } from './vocabulary/vocabulary.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { ConfigurationService } from './configuration/configuration.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(), 
     VocabulariesModule, 
-    LessonsModule
+    LessonsModule, AuthModule, UsersModule
   ],
-  providers: [ConfigurationService],
+  providers: [ConfigurationService, AppService],
+  controllers: [AppController],
 })
 
 export class AppModule {
