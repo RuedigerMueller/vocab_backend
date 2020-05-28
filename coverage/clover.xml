@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1586543222216" clover="3.2.0">
-  <project timestamp="1586543222216" name="All files">
-    <metrics statements="205" coveredstatements="205" conditionals="24" coveredconditionals="24" methods="54" coveredmethods="54" elements="283" coveredelements="283" complexity="0" loc="205" ncloc="205" packages="4" files="12" classes="12"/>
+<coverage generated="1590668088128" clover="3.2.0">
+  <project timestamp="1590668088128" name="All files">
+    <metrics statements="234" coveredstatements="234" conditionals="31" coveredconditionals="31" methods="60" coveredmethods="60" elements="325" coveredelements="325" complexity="0" loc="234" ncloc="234" packages="5" files="13" classes="13"/>
+    <package name="configuration">
+      <metrics statements="11" coveredstatements="11" conditionals="7" coveredconditionals="7" methods="1" coveredmethods="1"/>
+      <file name="configuration.service.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/configuration/configuration.service.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="7" coveredconditionals="7" methods="1" coveredmethods="1"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="8" count="16" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="16" count="8" type="stmt"/>
+        <line num="18" count="9" type="stmt"/>
+        <line num="20" count="10" type="stmt"/>
+        <line num="22" count="16" type="stmt"/>
+        <line num="24" count="16" type="stmt"/>
+      </file>
+    </package>
     <package name="lessons">
       <metrics statements="75" coveredstatements="75" conditionals="8" coveredconditionals="8" methods="22" coveredmethods="22"/>
-      <file name="lesson.repository.mock.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/lesson.repository.mock.ts">
+      <file name="lesson.repository.mock.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/lesson.repository.mock.ts">
         <metrics statements="22" coveredstatements="22" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8"/>
         <line num="2" count="4" type="stmt"/>
         <line num="5" count="4" type="stmt"/>
-        <line num="6" count="44" type="stmt"/>
-        <line num="9" count="44" type="stmt"/>
+        <line num="6" count="52" type="stmt"/>
+        <line num="9" count="52" type="stmt"/>
         <line num="14" count="14" type="stmt"/>
         <line num="30" count="36" type="stmt"/>
         <line num="34" count="8" type="stmt"/>
@@ -29,7 +46,7 @@
         <line num="61" count="4" type="stmt"/>
         <line num="62" count="4" type="stmt"/>
       </file>
-      <file name="lessons.controller.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/lessons.controller.ts">
+      <file name="lessons.controller.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/lessons.controller.ts">
         <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
         <line num="1" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
@@ -48,29 +65,29 @@
         <line num="44" count="1" type="stmt"/>
         <line num="45" count="1" type="stmt"/>
       </file>
-      <file name="lessons.service.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/lessons.service.ts">
+      <file name="lessons.service.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/lessons.service.ts">
         <metrics statements="19" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
         <line num="1" count="4" type="stmt"/>
         <line num="2" count="4" type="stmt"/>
         <line num="3" count="4" type="stmt"/>
         <line num="4" count="4" type="stmt"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="12" count="44" type="stmt"/>
-        <line num="16" count="14" type="stmt"/>
-        <line num="20" count="8" type="stmt"/>
-        <line num="24" count="4" type="stmt"/>
-        <line num="28" count="2" type="stmt"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="13" count="52" type="stmt"/>
+        <line num="17" count="14" type="stmt"/>
+        <line num="21" count="8" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
         <line num="29" count="2" type="stmt"/>
         <line num="30" count="2" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
         <line num="32" count="2" type="stmt"/>
-        <line num="34" count="2" type="stmt"/>
-        <line num="38" count="4" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
         <line num="39" count="4" type="stmt"/>
-        <line num="41" count="4" type="stmt"/>
-        <line num="43" count="4" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="44" count="4" type="stmt"/>
       </file>
-      <file name="lessons.test.data.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/lessons.test.data.ts">
+      <file name="lessons.test.data.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/lessons.test.data.ts">
         <metrics statements="18" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="4" type="stmt"/>
         <line num="10" count="28" type="stmt"/>
@@ -94,7 +111,7 @@
     </package>
     <package name="lessons.dto">
       <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="create-lesson.dto.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/dto/create-lesson.dto.ts">
+      <file name="create-lesson.dto.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/dto/create-lesson.dto.ts">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -103,7 +120,7 @@
         <line num="11" count="1" type="stmt"/>
         <line num="14" count="1" type="stmt"/>
       </file>
-      <file name="update-lesson.dto.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/lessons/dto/update-lesson.dto.ts">
+      <file name="update-lesson.dto.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/lessons/dto/update-lesson.dto.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -112,71 +129,114 @@
         <line num="11" count="1" type="stmt"/>
       </file>
     </package>
-    <package name="vocabularies">
-      <metrics statements="109" coveredstatements="109" conditionals="16" coveredconditionals="16" methods="32" coveredmethods="32"/>
-      <file name="vocabularies.controller.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/vocabularies.controller.ts">
-        <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+    <package name="vocabulary">
+      <metrics statements="127" coveredstatements="127" conditionals="16" coveredconditionals="16" methods="37" coveredmethods="37"/>
+      <file name="vocabulary.controller.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/vocabulary.controller.ts">
+        <metrics statements="24" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="10"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
-        <line num="18" count="1" type="stmt"/>
-        <line num="19" count="10" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
-        <line num="23" count="6" type="stmt"/>
-        <line num="27" count="1" type="stmt"/>
-        <line num="28" count="5" type="stmt"/>
-        <line num="32" count="1" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="15" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="6" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="7" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
         <line num="38" count="1" type="stmt"/>
         <line num="39" count="1" type="stmt"/>
         <line num="43" count="1" type="stmt"/>
-        <line num="44" count="1" type="stmt"/>
-        <line num="48" count="1" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
         <line num="49" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
         <line num="54" count="1" type="stmt"/>
-        <line num="58" count="1" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
       </file>
-      <file name="vocabularies.service.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/vocabularies.service.ts">
-        <metrics statements="36" coveredstatements="36" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8"/>
+      <file name="vocabulary.repository.mock.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/vocabulary.repository.mock.ts">
+        <metrics statements="22" coveredstatements="22" conditionals="8" coveredconditionals="8" methods="9" coveredmethods="9"/>
+        <line num="2" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="9" count="34" type="stmt"/>
+        <line num="12" count="34" type="stmt"/>
+        <line num="34" count="132" type="stmt"/>
+        <line num="38" count="142" type="stmt"/>
+        <line num="42" count="18" type="stmt"/>
+        <line num="43" count="108" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="16" type="stmt"/>
+        <line num="46" count="92" type="stmt"/>
+        <line num="49" count="18" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="59" count="14" type="stmt"/>
+        <line num="60" count="14" type="stmt"/>
+        <line num="61" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="63" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="14" type="stmt"/>
+        <line num="65" count="14" type="stmt"/>
+        <line num="66" count="14" type="stmt"/>
+      </file>
+      <file name="vocabulary.service.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/vocabulary.service.ts">
+        <metrics statements="50" coveredstatements="50" conditionals="8" coveredconditionals="8" methods="11" coveredmethods="11"/>
         <line num="1" count="2" type="stmt"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
         <line num="7" count="2" type="stmt"/>
-        <line num="10" count="2" type="stmt"/>
-        <line num="13" count="26" type="stmt"/>
-        <line num="14" count="26" type="stmt"/>
-        <line num="18" count="16" type="stmt"/>
-        <line num="22" count="18" type="stmt"/>
-        <line num="26" count="4" type="stmt"/>
-        <line num="30" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="14" count="34" type="stmt"/>
+        <line num="15" count="34" type="stmt"/>
+        <line num="16" count="34" type="stmt"/>
+        <line num="20" count="16" type="stmt"/>
+        <line num="24" count="22" type="stmt"/>
+        <line num="28" count="4" type="stmt"/>
         <line num="32" count="2" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
         <line num="34" count="2" type="stmt"/>
         <line num="35" count="2" type="stmt"/>
         <line num="36" count="2" type="stmt"/>
         <line num="37" count="2" type="stmt"/>
+        <line num="39" count="2" type="stmt"/>
         <line num="40" count="2" type="stmt"/>
-        <line num="47" count="6" type="stmt"/>
-        <line num="48" count="6" type="stmt"/>
-        <line num="49" count="6" type="stmt"/>
-        <line num="50" count="6" type="cond" truecount="4" falsecount="0"/>
-        <line num="51" count="4" type="stmt"/>
-        <line num="54" count="2" type="stmt"/>
-        <line num="57" count="6" type="stmt"/>
-        <line num="61" count="3" type="stmt"/>
-        <line num="62" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="63" count="2" type="stmt"/>
-        <line num="64" count="2" type="stmt"/>
-        <line num="67" count="3" type="stmt"/>
-        <line num="71" count="3" type="stmt"/>
-        <line num="72" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="50" count="6" type="stmt"/>
+        <line num="51" count="6" type="stmt"/>
+        <line num="52" count="6" type="stmt"/>
+        <line num="53" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="54" count="4" type="stmt"/>
+        <line num="57" count="2" type="stmt"/>
+        <line num="60" count="6" type="stmt"/>
+        <line num="64" count="4" type="stmt"/>
+        <line num="66" count="4" type="stmt"/>
+        <line num="68" count="4" type="stmt"/>
+        <line num="70" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="71" count="2" type="stmt"/>
+        <line num="72" count="2" type="stmt"/>
         <line num="73" count="2" type="stmt"/>
-        <line num="74" count="2" type="stmt"/>
-        <line num="77" count="3" type="stmt"/>
+        <line num="75" count="2" type="stmt"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="79" count="4" type="stmt"/>
+        <line num="83" count="4" type="stmt"/>
+        <line num="84" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="85" count="2" type="stmt"/>
+        <line num="86" count="2" type="stmt"/>
+        <line num="87" count="2" type="stmt"/>
+        <line num="88" count="2" type="stmt"/>
+        <line num="91" count="4" type="stmt"/>
+        <line num="95" count="6" type="stmt"/>
+        <line num="100" count="2" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
+        <line num="102" count="2" type="stmt"/>
+        <line num="103" count="12" type="stmt"/>
       </file>
-      <file name="vocabularies.test.data.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/vocabularies.test.data.ts">
+      <file name="vocabulary.test.data.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/vocabulary.test.data.ts">
         <metrics statements="31" coveredstatements="31" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
         <line num="1" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
@@ -210,35 +270,10 @@
         <line num="71" count="2" type="stmt"/>
         <line num="72" count="4" type="stmt"/>
       </file>
-      <file name="vocabulary.repository.mock.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/vocabulary.repository.mock.ts">
-        <metrics statements="22" coveredstatements="22" conditionals="8" coveredconditionals="8" methods="9" coveredmethods="9"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
-        <line num="9" count="26" type="stmt"/>
-        <line num="12" count="26" type="stmt"/>
-        <line num="34" count="96" type="stmt"/>
-        <line num="38" count="108" type="stmt"/>
-        <line num="42" count="16" type="stmt"/>
-        <line num="43" count="96" type="cond" truecount="2" falsecount="0"/>
-        <line num="44" count="14" type="stmt"/>
-        <line num="46" count="82" type="stmt"/>
-        <line num="49" count="16" type="stmt"/>
-        <line num="53" count="2" type="stmt"/>
-        <line num="54" count="2" type="stmt"/>
-        <line num="55" count="2" type="stmt"/>
-        <line num="59" count="12" type="stmt"/>
-        <line num="60" count="12" type="stmt"/>
-        <line num="61" count="12" type="cond" truecount="2" falsecount="0"/>
-        <line num="62" count="12" type="cond" truecount="2" falsecount="0"/>
-        <line num="63" count="12" type="cond" truecount="2" falsecount="0"/>
-        <line num="64" count="12" type="stmt"/>
-        <line num="65" count="12" type="stmt"/>
-        <line num="66" count="12" type="stmt"/>
-      </file>
     </package>
-    <package name="vocabularies.dto">
+    <package name="vocabulary.dto">
       <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="create-vocabulary.dto.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/dto/create-vocabulary.dto.ts">
+      <file name="create-vocabulary.dto.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/dto/create-vocabulary.dto.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -246,7 +281,7 @@
         <line num="8" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
       </file>
-      <file name="update-vocabulary.dto.ts" path="/Users/Ruediger/Dev/Code/vocab/backend/src/vocabularies/dto/update-vocabulary.dto.ts">
+      <file name="update-vocabulary.dto.ts" path="/Users/Ruediger/Dev/Code/vocab_backend/src/vocabulary/dto/update-vocabulary.dto.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>

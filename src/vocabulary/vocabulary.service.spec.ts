@@ -278,7 +278,7 @@ describe('VocabulariesService', () => {
   });
 
   describe('getDueLessonVocabulary', () => {
-    xit('should return the same number of vocabularies as there are due vocabularies', async () => {
+    it('should return the same number of vocabularies as there are due vocabularies', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const currentDate = new Date();
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
