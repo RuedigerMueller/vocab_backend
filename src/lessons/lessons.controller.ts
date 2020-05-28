@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './lesson.entity';
 import { LessonsService } from './lessons.service';
 
+// @UseGuards(JwtAuthGuard)
 @Controller('lessons')
 export class LessonsController {
   constructor(private _lessonsService: LessonsService) {}
@@ -19,7 +20,6 @@ export class LessonsController {
     return this._lessonsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this._lessonsService.remove(id);
