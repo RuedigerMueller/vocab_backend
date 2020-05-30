@@ -1,20 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Put,
-  Delete,
-  UsePipes,
-  ValidationPipe,
-  Patch,
-} from '@nestjs/common';
-import { VocabularyService } from './vocabulary.service';
-import { Vocabulary } from './vocabulary.entity';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { Vocabulary } from './vocabulary.entity';
+import { VocabularyService } from './vocabulary.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller()
 export class VocabularyController {
   constructor(private _vocabulariesService: VocabularyService) {}
