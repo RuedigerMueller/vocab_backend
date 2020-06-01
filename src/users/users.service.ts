@@ -29,6 +29,7 @@ export class UsersService {
   }
 
   async findbyID(id: number): Promise<User | undefined> {
+    console.log('findbyID: ',id);
     return this._userRepository.findOne({ where: { id: id } });
   }
 }

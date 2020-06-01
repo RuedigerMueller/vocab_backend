@@ -4,8 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './lesson.entity';
-import { User } from 'src/users/user.entity';
-
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class LessonsService {
@@ -29,7 +28,8 @@ export class LessonsService {
 
   async create(createLessonDto: CreateLessonDto, user: User): Promise<Lesson> {
     const lesson: Lesson = new Lesson();
-    lesson.username = user.username;
+
+    lesson.user = user
     lesson.title = createLessonDto.title;
     lesson.language_a = createLessonDto.language_a;
     lesson.language_b = createLessonDto.language_b;

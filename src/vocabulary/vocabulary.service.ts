@@ -33,7 +33,7 @@ export class VocabularyService {
   async create(createVocabularyDto: CreateVocabularyDto, user: User): Promise<Vocabulary> {
     const vocabulary: Vocabulary = new Vocabulary();
 
-    vocabulary.username = user.username;
+    vocabulary.user = user;
     vocabulary.language_a = createVocabularyDto.language_a;
     vocabulary.language_b = createVocabularyDto.language_b;
     vocabulary.level = 1;

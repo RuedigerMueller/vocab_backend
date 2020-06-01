@@ -7,6 +7,8 @@ import { LessonsService } from '../lessons/lessons.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { VocabularyController } from './vocabulary.controller';
 import { ConfigurationService } from '../configuration/configuration.service';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vocabulary, Lesson])],
