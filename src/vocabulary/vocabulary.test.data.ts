@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 import { Lesson } from '../lessons/lesson.entity';
 import { initialLessonRepository } from '../lessons/lessons.test.data';
 import { Vocabulary } from './vocabulary.entity';

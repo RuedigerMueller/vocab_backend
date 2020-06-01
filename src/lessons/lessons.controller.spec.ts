@@ -1,19 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LessonsController } from './lessons.controller';
-import { Lesson } from './lesson.entity';
-import { LessonsService } from './lessons.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { LessonRepositoryMock } from './lesson.repository.mock';
-import {
-  initialLessonRepository,
-  addLesson,
-  updateLesson,
-} from './lessons.test.data';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { Lesson } from './lesson.entity';
+import { LessonRepositoryMock } from './lesson.repository.mock';
+import { LessonsController } from './lessons.controller';
+import { LessonsService } from './lessons.service';
+import { addLesson, initialLessonRepository, updateLesson } from './lessons.test.data';
+import { initialUserRepository } from '../users/user.test.data';
+
+
 
 describe('Lessons Controller', () => {
   let controller: LessonsController;
+  /* const input = {
+    user: initialUserRepository[0]
+  }; */
+  // let request: Request;
+  let http = require('http');
+  let request = new http.IncomingMessage();
+  request.data = request.data || { };
+  request.data.remoteUser = initialUserRepository[0];
+  //request['user'] = initialUserRepository[0];;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,7 +45,7 @@ describe('Lessons Controller', () => {
   describe('findAll', () => {
     it('should find lessons', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository;
-      const result = await controller.findAll();
+      const result = await controller.findAll(request);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -49,11 +57,11 @@ describe('Lessons Controller', () => {
       const expected_result: Lesson = initialLessonRepository.find(
         lesson => lesson.id === 2,
       );
-      expect(await controller.findOne('2')).toEqual(expected_result);
+      expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
     it('should be undefined if the id does not exist', async () => {
-      expect(await controller.findOne('0')).toBeUndefined();
+      expect(await controller.findOne(request, '0')).toBeUndefined();
     });
   });
 
@@ -70,34 +78,33 @@ describe('Lessons Controller', () => {
         },
       );
 
-      const entries_before = await (await controller.findAll()).length;
-      await controller.remove('2');
+      const entries_before = await (await controller.findAll(request)).length;
+      await controller.remove(request, '2');
 
-      const after_remove: ReadonlyArray<Lesson> = await controller.findAll();
+      const after_remove: ReadonlyArray<Lesson> = await controller.findAll(request);
       expect(after_remove).toEqual(expected_result);
       expect(after_remove.length).toEqual(entries_before - 1);
-      expect(await controller.findOne('2')).toBeUndefined();
+      expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository;
-      await controller.remove('0');
-      expect(await controller.findAll()).toEqual(expected_result);
+      await controller.remove(request, '0');
+      expect(await controller.findAll(request)).toEqual(expected_result);
     });
   });
 
   describe('create', () => {
     it('should add the lesson to the repository', async () => {
       const lesson: CreateLessonDto = {
-        user: addLesson.user,
         title: addLesson.title,
         language_a: addLesson.language_a,
         language_b: addLesson.language_a,
       };
 
-      await controller.create(lesson);
+      await controller.create(request, lesson);
 
-      const allLessons = await controller.findAll();
+      const allLessons = await controller.findAll(request);
       //Todo Improve search
       const searchResult: Lesson = allLessons.find(
         lesson => lesson.language_a === addLesson.language_a,
@@ -114,8 +121,8 @@ describe('Lessons Controller', () => {
         language_b: updateLesson.language_b,
       };
 
-      await controller.update(updateLesson.id.toString(), lesson);
-      const allLessons = await controller.findAll();
+      await controller.update(request, updateLesson.id.toString(), lesson);
+      const allLessons = await controller.findAll(request);
       const searchResult: Lesson = allLessons.find(
         lesson => lesson.id === updateLesson.id,
       );

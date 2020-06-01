@@ -10,8 +10,11 @@ import { Vocabulary } from './vocabulary.entity';
 import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
 import { VocabularyService } from './vocabulary.service';
 import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
+import { User } from '../users/user.entity';
+import { initialUserRepository } from '../users/user.test.data';
 
 describe('VocabulariesService', () => {
+  const user: User = initialUserRepository[0];
   let service: VocabularyService;
   let configuration : ConfigurationService;
 
@@ -43,9 +46,17 @@ describe('VocabulariesService', () => {
   
   describe('findAll', () => {
     it('should return an array of vocabularies', async () => {
-      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
+        vocab => {
+          if (vocab.user === user) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      );
       
-      const result = await service.findAll();
+      const result = await service.findAll(user);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -57,11 +68,15 @@ describe('VocabulariesService', () => {
       const expected_result: Vocabulary = initialVocabularyRepository.find(
         vocab => vocab.id === 2,
       );
-      expect(await service.findOne('2')).toEqual(expected_result);
+      expect(await service.findOne('2', user)).toEqual(expected_result);
+    });
+
+    xit('should not find a valid ID but from different user', () => {
+
     });
 
     it('should be undefined if the id does not exist', async () => {
-      expect(await service.findOne('0')).toBeUndefined();
+      expect(await service.findOne('0', user)).toBeUndefined();
     });
   });
 
@@ -78,19 +93,23 @@ describe('VocabulariesService', () => {
         },
       );
 
-      const entries_before = await (await service.findAll()).length;
-      await service.remove('2');
+      const entries_before = await (await service.findAll(user)).length;
+      await service.remove('2', user);
 
-      const after_remove: Array<Vocabulary> = await service.findAll();
+      const after_remove: Array<Vocabulary> = await service.findAll(user);
       expect(after_remove).toEqual(expected_result);
       expect(after_remove.length).toEqual(entries_before - 1);
-      expect(await service.findOne('2')).toBeUndefined();
+      expect(await service.findOne('2', user)).toBeUndefined();
+    });
+
+    xit('should not remove a valid ID but from different user', () => {
+
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
-      await service.remove('0');
-      expect(await service.findAll()).toEqual(expected_result);
+      await service.remove('0', user);
+      expect(await service.findAll(user)).toEqual(expected_result);
     });
   });
 
@@ -102,13 +121,13 @@ describe('VocabulariesService', () => {
         lesson: addVocabulary.lesson.id,
       };
 
-      const vocabulary: Vocabulary = await service.create(vocab);
+      const vocabulary: Vocabulary = await service.create(vocab, user);
       expect(vocabulary.language_a).toEqual(addVocabulary.language_a);
       expect(vocabulary.language_b).toEqual(addVocabulary.language_b);
       expect(vocabulary.dueDate).toEqual(addVocabulary.dueDate);
       expect(vocabulary.level).toEqual(addVocabulary.level);
 
-      const allVocabularies = await service.findAll();
+      const allVocabularies = await service.findAll(user);
       //Todo: Improve search
       const searchResult: Vocabulary = allVocabularies.find(
         vocab => vocab.language_a === addVocabulary.language_a,
@@ -119,7 +138,7 @@ describe('VocabulariesService', () => {
 
   describe('update', () => {
     const updateCheck = async (update: Vocabulary) => {
-      const allVocabularies = await service.findAll();
+      const allVocabularies = await service.findAll(user);
       const searchResult: Vocabulary = allVocabularies.find(
         vocab => vocab.id === update.id,
       );
@@ -138,8 +157,12 @@ describe('VocabulariesService', () => {
         level: updateVocabulary.level,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
+      await service.update(updateVocabulary.id.toString(), vocab, user);
       updateCheck(updateVocabulary);
+    });
+
+    xit('should not update a valid ID but from different user', () => {
+
     });
 
     it('should update the vocabulary with partial information - language_a empty', async () => {
@@ -149,7 +172,7 @@ describe('VocabulariesService', () => {
         level: updateVocabulary.level,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
+      await service.update(updateVocabulary.id.toString(), vocab, user);
       updateCheck(updateVocabulary);
     });
 
@@ -160,7 +183,7 @@ describe('VocabulariesService', () => {
         level: updateVocabulary.level,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
+      await service.update(updateVocabulary.id.toString(), vocab, user);
       updateCheck(updateVocabulary);
     });
 
@@ -171,7 +194,7 @@ describe('VocabulariesService', () => {
         level: updateVocabulary_LevelTooHighTest.level + 1,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
+      await service.update(updateVocabulary.id.toString(), vocab, user);
       updateCheck(updateVocabulary_LevelTooHighTest);
     });
 
@@ -182,7 +205,7 @@ describe('VocabulariesService', () => {
         level: updateVocabulary_LevelTooLowTest.level - 1,
       };
 
-      await service.update(updateVocabulary.id.toString(), vocab);
+      await service.update(updateVocabulary.id.toString(), vocab, user);
       updateCheck(updateVocabulary_LevelTooLowTest);
     });
   });
@@ -199,20 +222,25 @@ describe('VocabulariesService', () => {
       expected_result.dueDate.setHours(0,0,0,0);
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + nextDueIn);
 
-      await service.vocabKnown(knownVocabulary.id.toString());
-      const result = await service.findOne(knownVocabulary.id.toString());
+      await service.vocabKnown(knownVocabulary.id.toString(), user);
+      const result = await service.findOne(knownVocabulary.id.toString(), user);
 
       expect(result).toMatchObject(expected_result);
       expect(result.dueDate).toEqual(expected_result.dueDate);
     });
 
+    xit('should not update valid vocabulary from different user', async() => {
+
+    })
+
     it('should not go above level 7', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooHighTest);
       expected_result.dueDate = new Date(9999,12,31);
-      await service.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString());
+      await service.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString(), user);
       const result = await service.findOne(
         updateVocabulary_LevelTooHighTest.id.toString(),
+        user
       );
 
       expect(result).toMatchObject(expected_result);
@@ -229,20 +257,26 @@ describe('VocabulariesService', () => {
       expected_result.dueDate.setHours(0,0,0,0);
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
 
-      await service.vocabUnknown(unknownVocabulary.id.toString());
-      const result = await service.findOne(unknownVocabulary.id.toString());
+      await service.vocabUnknown(unknownVocabulary.id.toString(), user);
+      const result = await service.findOne(unknownVocabulary.id.toString(), user);
 
       expect(result).toEqual(expected_result);
     });
+
+    xit('should not update valid vocabulary from different user', async() => {
+
+    })
 
     it('should not go below level 1', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooLowTest);
       await service.vocabUnknown(
         updateVocabulary_LevelTooLowTest.id.toString(),
+        user
       );
       const result = await service.findOne(
         updateVocabulary_LevelTooLowTest.id.toString(),
+        user
       );
 
       expect(result).toMatchObject(expected_result);
@@ -258,7 +292,7 @@ describe('VocabulariesService', () => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
         }
       );
-      const result = await service.getLessonVocabulary(testLessonID.toString());
+      const result = await service.getLessonVocabulary(testLessonID.toString(), user);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -266,7 +300,7 @@ describe('VocabulariesService', () => {
 
     it('should only return vocabulary for the lesson', async() => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
-      const result = await service.getLessonVocabulary(testLessonID.toString());
+      const result = await service.getLessonVocabulary(testLessonID.toString(), user);
       const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
@@ -286,7 +320,7 @@ describe('VocabulariesService', () => {
           if (vocabulary.dueDate <= currentDate) return vocabulary;
         }
       );
-      const result = await service.getDueLessonVocabulary(testLessonID.toString());
+      const result = await service.getDueLessonVocabulary(testLessonID.toString(), user);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -295,7 +329,7 @@ describe('VocabulariesService', () => {
     it('should only return due vocabularies', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const currentDate = new Date();
-      const result = await service.getDueLessonVocabulary(testLessonID.toString());
+      const result = await service.getDueLessonVocabulary(testLessonID.toString(), user);
       const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if ((vocabulary.dueDate <= currentDate) && (vocabulary.lesson.id === testLessonID)) return vocabulary;

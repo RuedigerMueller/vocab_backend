@@ -1,28 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { VocabularyController } from './vocabulary.controller';
-import { VocabularyService } from './vocabulary.service';
-import { Vocabulary } from './vocabulary.entity';
-import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
-import {
-  initialVocabularyRepository,
-  addVocabulary,
-  updateVocabulary,
-  knownVocabulary,
-  unknownVocabulary,
-  updateVocabulary_LevelTooHighTest,
-  updateVocabulary_LevelTooLowTest,
-} from './vocabulary.test.data';
-import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
-import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { ConfigurationService } from '../configuration/configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
 import { LessonsService } from '../lessons/lessons.service';
-import { ConfigurationService } from '../configuration/configuration.service';
+import { initialUserRepository } from '../users/user.test.data';
+import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
+import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { VocabularyController } from './vocabulary.controller';
+import { Vocabulary } from './vocabulary.entity';
+import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
+import { VocabularyService } from './vocabulary.service';
+import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
 
 describe('Vocabularies Controller', () => {
   let controller: VocabularyController;
   let configuration: ConfigurationService;
+  let http = require('http');
+  let request = new http.IncomingMessage();
+  request.data = request.data || { };
+  request.data.remoteUser = initialUserRepository[0];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,7 +50,7 @@ describe('Vocabularies Controller', () => {
   describe('findAll', () => {
     it('should find vocabularies', async () => {
       const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
-      const result = await controller.findAll();
+      const result = await controller.findAll(request);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -65,11 +62,11 @@ describe('Vocabularies Controller', () => {
       const expected_result: Vocabulary = initialVocabularyRepository.find(
         vocab => vocab.id === 2,
       );
-      expect(await controller.findOne('2')).toEqual(expected_result);
+      expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
     it('should be undefined if the id does not exist', async () => {
-      expect(await controller.findOne('0')).toBeUndefined();
+      expect(await controller.findOne(request, '0')).toBeUndefined();
     });
   });
 
@@ -86,20 +83,20 @@ describe('Vocabularies Controller', () => {
         },
       );
 
-      const entries_before = await (await controller.findAll()).length;
-      await controller.remove('2');
+      const entries_before = await (await controller.findAll(request)).length;
+      await controller.remove(request, '2');
 
-      const after_remove: Array<Vocabulary> = await controller.findAll();
+      const after_remove: Array<Vocabulary> = await controller.findAll(request);
       expect(after_remove).toEqual(expected_result);
       expect(after_remove.length).toEqual(entries_before - 1);
-      expect(await controller.findOne('2')).toBeUndefined();
+      expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
       
-      await controller.remove('0');
-      expect(await controller.findAll()).toEqual(expected_result);
+      await controller.remove(request, '0');
+      expect(await controller.findAll(request)).toEqual(expected_result);
     });
   });
 
@@ -111,9 +108,9 @@ describe('Vocabularies Controller', () => {
         lesson: addVocabulary.lesson.id,
       };
 
-      await controller.create(vocab);
+      await controller.create(request, vocab);
 
-      const allVocabularies = await controller.findAll();
+      const allVocabularies = await controller.findAll(request);
       const searchResult: Vocabulary = allVocabularies.find(
         vocab => vocab.language_a === addVocabulary.language_a,
       );
@@ -129,8 +126,8 @@ describe('Vocabularies Controller', () => {
         level: updateVocabulary.level,
       };
 
-      await controller.update(updateVocabulary.id.toString(), vocab);
-      const allVocabularies = await controller.findAll();
+      await controller.update(request, updateVocabulary.id.toString(), vocab);
+      const allVocabularies = await controller.findAll(request);
       const searchResult: Vocabulary = allVocabularies.find(
         vocab => vocab.id === updateVocabulary.id,
       );
@@ -154,8 +151,8 @@ describe('Vocabularies Controller', () => {
       expected_result.dueDate.setHours(0,0,0,0);
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + nextDueIn);
 
-      await controller.vocabKnown(knownVocabulary.id.toString());
-      const result = await controller.findOne(knownVocabulary.id.toString());
+      await controller.vocabKnown(request, knownVocabulary.id.toString());
+      const result = await controller.findOne(request, knownVocabulary.id.toString());
 
       expect(result).toMatchObject(expected_result);
       expect(result.dueDate).toEqual(expected_result.dueDate);
@@ -165,8 +162,9 @@ describe('Vocabularies Controller', () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooHighTest);
       expected_result.dueDate = new Date(9999,12,31);
-      await controller.vocabKnown(updateVocabulary_LevelTooHighTest.id.toString());
+      await controller.vocabKnown(request, updateVocabulary_LevelTooHighTest.id.toString());
       const result = await controller.findOne(
+        request, 
         updateVocabulary_LevelTooHighTest.id.toString(),
       );
 
@@ -184,8 +182,8 @@ describe('Vocabularies Controller', () => {
       expected_result.dueDate.setHours(0,0,0,0);
       expected_result.dueDate.setDate(expected_result.dueDate.getDate() + 1);
 
-      await controller.vocabUnknown(unknownVocabulary.id.toString());
-      const result = await controller.findOne(unknownVocabulary.id.toString());
+      await controller.vocabUnknown(request, unknownVocabulary.id.toString());
+      const result = await controller.findOne(request, unknownVocabulary.id.toString());
 
       expect(result).toEqual(expected_result);
     });
@@ -194,9 +192,11 @@ describe('Vocabularies Controller', () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooLowTest);
       await controller.vocabUnknown(
+        request, 
         updateVocabulary_LevelTooLowTest.id.toString(),
       );
       const result = await controller.findOne(
+        request, 
         updateVocabulary_LevelTooLowTest.id.toString(),
       );
 
@@ -213,7 +213,7 @@ describe('Vocabularies Controller', () => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
         }
       );
-      const result = await controller.getLessonVocabulary(testLessonID.toString());
+      const result = await controller.getLessonVocabulary(request, testLessonID.toString());
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -221,7 +221,7 @@ describe('Vocabularies Controller', () => {
     
     it('should only return vocabulary for the lesson', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
-      const result = await controller.getLessonVocabulary(testLessonID.toString());
+      const result = await controller.getLessonVocabulary(request, testLessonID.toString());
       const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if (vocabulary.lesson.id === testLessonID) return vocabulary;
@@ -241,7 +241,7 @@ describe('Vocabularies Controller', () => {
           if (vocabulary.dueDate <= currentDate) return vocabulary;
         }
       );
-      const result = await controller.getDueLessonVocabulary(testLessonID.toString());
+      const result = await controller.getDueLessonVocabulary(request, testLessonID.toString());
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -250,7 +250,7 @@ describe('Vocabularies Controller', () => {
     it('should only return due vocabularies', async () => {
       const testLessonID: number = initialVocabularyRepository[0].lesson.id;
       const currentDate = new Date();
-      const result = await controller.getDueLessonVocabulary(testLessonID.toString());
+      const result = await controller.getDueLessonVocabulary(request, testLessonID.toString());
       const expected_result: Array<Vocabulary> = result.filter(
         (vocabulary: Vocabulary) => {
           if ((vocabulary.dueDate <= currentDate) && (vocabulary.lesson.id === testLessonID)) return vocabulary;

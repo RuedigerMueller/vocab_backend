@@ -6,7 +6,7 @@ import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { Vocabulary } from './vocabulary.entity';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class VocabularyService {

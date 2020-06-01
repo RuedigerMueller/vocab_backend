@@ -25,8 +25,17 @@ function createUser(
     createUser(1, 'john', 'changeme', 'John', 'Miller', 'john@example.com'),
   );
   initialUserRepository = initialUserRepository.concat(
-    createUser(1, 'chris', 'secret', 'Chris', 'Myres', 'chris@example.com'),
+    createUser(2, 'chris', 'secret', 'Chris', 'Myres', 'chris@example.com'),
   );
   initialUserRepository = initialUserRepository.concat(
-    createUser(1, 'maria', 'guess', 'Maria', 'Muller', 'maria@example.com'),
+    createUser(3, 'maria', 'guess', 'Maria', 'Muller', 'maria@example.com'),
+  );
+
+  export const addUser: User = createUser(
+    4,
+    'paula',
+    'special',
+    'Paula',
+    'Paulsen',
+    'paula@example.com'
   );

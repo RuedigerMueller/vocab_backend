@@ -4,7 +4,7 @@ import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { Vocabulary } from './vocabulary.entity';
 import { VocabularyService } from './vocabulary.service';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller()

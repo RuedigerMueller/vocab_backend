@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Vocabulary } from '../vocabulary/vocabulary.entity';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Lesson {

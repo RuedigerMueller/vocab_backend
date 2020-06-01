@@ -1,6 +1,6 @@
+import { User } from '../users/user.entity';
+import { initialUserRepository } from '../users/user.test.data';
 import { Lesson } from './lesson.entity';
-import { User } from 'src/users/user.entity';
-import { initialUserRepository } from 'src/users/user.test.data';
 
 function createLesson(
   id: number,

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Vocabulary } from "src/vocabulary/vocabulary.entity";
-import { Lesson } from "src/lessons/lesson.entity";
+import { Vocabulary } from "../vocabulary/vocabulary.entity";
+import { Lesson } from "../lessons/lesson.entity";
 
 @Entity()
 export class User {

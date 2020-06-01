@@ -4,7 +4,7 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './lesson.entity';
 import { LessonsService } from './lessons.service';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('lessons')
@@ -13,6 +13,7 @@ export class LessonsController {
 
   @Get()
   async findAll(@Request() request: Request): Promise<Lesson[]> { 
+    console.log(request);
     const user: User = request['user'];
     return this._lessonsService.findAll(user);
   }

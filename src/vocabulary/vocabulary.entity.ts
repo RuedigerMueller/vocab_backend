@@ -1,15 +1,12 @@
 /* istanbul ignore file */
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Lesson } from '../lessons/lesson.entity';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Vocabulary {
   @PrimaryGeneratedColumn()
   id: number;
-
-  /* @Column()
-  username: string; */
 
   @Column()
   language_a: string;
