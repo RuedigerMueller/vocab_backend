@@ -8,6 +8,9 @@ export class Vocabulary {
   id: number;
 
   @Column()
+  username: string;
+
+  @Column()
   language_a: string;
 
   @Column()

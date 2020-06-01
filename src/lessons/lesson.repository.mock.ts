@@ -50,7 +50,7 @@ export class LessonRepositoryMock {
   async update(id: string, lesson: Lesson) {
     const before: Lesson = await this.findOne(id);
     lesson.id = parseInt(id);
-    lesson.user = before.user;
+    lesson.username = before.username;
     lesson.title = lesson.title ? lesson.title : before.title;
     lesson.language_a = lesson.language_a
       ? lesson.language_a

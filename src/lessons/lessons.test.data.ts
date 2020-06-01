@@ -2,14 +2,14 @@ import { Lesson } from './lesson.entity';
 
 function createLesson(
   id: number,
-  user: string,
+  username: string,
   title: string,
   language_a: string,
   language_b: string,
 ): Lesson {
   const lesson: Lesson = new Lesson();
   lesson.id = id;
-  lesson.user = user;
+  lesson.username = username;
   lesson.title = title;
   lesson.language_a = language_a;
   lesson.language_b = language_b;

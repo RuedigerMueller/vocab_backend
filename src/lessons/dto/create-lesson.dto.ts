@@ -2,9 +2,6 @@ import { IsString } from 'class-validator';
 
 export class CreateLessonDto {
   @IsString()
-  user: string;
-
-  @IsString()
   title: string;
 
   @IsString()

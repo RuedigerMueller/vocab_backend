@@ -6,6 +6,7 @@ import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { Vocabulary } from './vocabulary.entity';
 import { ConfigurationService } from '../configuration/configuration.service';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class VocabularyService {
@@ -16,21 +17,23 @@ export class VocabularyService {
     private _configurationService: ConfigurationService
   ) { }
 
-  async findAll(): Promise<Vocabulary[]> {
-    return this._vocabulariesRepository.find();
+  async findAll(user: User): Promise<Vocabulary[]> {
+    return this._vocabulariesRepository.find({ where: { username: user.username } });
   }
 
-  findOne(id: string): Promise<Vocabulary> {
-    return this._vocabulariesRepository.findOne(id);
+  findOne(id: string, user: User): Promise<Vocabulary> {
+    return this._vocabulariesRepository.findOne({ where: { id: id, username: user.username } });
   }
 
-  async remove(id: string): Promise<void> {
-    await this._vocabulariesRepository.delete(id);
+  async remove(id: string, user: User): Promise<void> {
+    const vocabulary: Vocabulary = await this.findOne(id, user);
+    if (vocabulary) await this._vocabulariesRepository.delete(id);
   }
 
-  async create(createVocabularyDto: CreateVocabularyDto): Promise<Vocabulary> {
-    const vocabulary = new Vocabulary();
+  async create(createVocabularyDto: CreateVocabularyDto, user: User): Promise<Vocabulary> {
+    const vocabulary: Vocabulary = new Vocabulary();
 
+    vocabulary.username = user.username;
     vocabulary.language_a = createVocabularyDto.language_a;
     vocabulary.language_b = createVocabularyDto.language_b;
     vocabulary.level = 1;
@@ -39,6 +42,7 @@ export class VocabularyService {
     vocabulary.dueDate.setHours(0, 0, 0, 0);
     vocabulary.lesson = await this._lessonsService.findOne(
       createVocabularyDto.lesson.toString(),
+      user
     );
     return await this._vocabulariesRepository.save(vocabulary);
   }
@@ -46,59 +50,65 @@ export class VocabularyService {
   async update(
     id: string,
     updateVocabularyDto: UpdateVocabularyDto,
+    user: User
   ): Promise<void> {
-    const vocabulary = new Vocabulary();
-    vocabulary.language_a = updateVocabularyDto.language_a;
-    vocabulary.language_b = updateVocabularyDto.language_b;
-    if (updateVocabularyDto.level > 0 && updateVocabularyDto.level < 8) {
-      vocabulary.level = updateVocabularyDto.level;
-      //ToDo update date?
-    } else {
-      vocabulary.level = vocabulary.level;
+    const vocabulary: Vocabulary = await this.findOne(id, user);
+
+    if (vocabulary) {
+      vocabulary.language_a = updateVocabularyDto.language_a;
+      vocabulary.language_b = updateVocabularyDto.language_b;
+      if (updateVocabularyDto.level > 0 && updateVocabularyDto.level < 8) {
+        vocabulary.level = updateVocabularyDto.level;
+        //ToDo update date?
+      } else {
+        vocabulary.level = vocabulary.level;
+      }
+      await this._vocabulariesRepository.update(id, vocabulary);
     }
-
-    await this._vocabulariesRepository.update(id, vocabulary);
   }
 
-  async vocabKnown(id: string): Promise<void> {
-    const vocabulary = await this.findOne(id);
+  async vocabKnown(id: string, user: User): Promise<void> {
+    const vocabulary = await this.findOne(id, user);
 
-    vocabulary.level += 1;
+    if (vocabulary) {
+      vocabulary.level += 1;
 
-    const nextDueIn: number = this._configurationService.getDueInDays(vocabulary.level);
-    
-    if (vocabulary.level < 7) {
-      vocabulary.dueDate = new Date();
-      vocabulary.dueDate.setHours(0, 0, 0, 0);
-      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);
-    } else {
-      vocabulary.level = 7;
-      vocabulary.dueDate = new Date(9999, 12, 31);
+      const nextDueIn: number = this._configurationService.getDueInDays(vocabulary.level);
+
+      if (vocabulary.level < 7) {
+        vocabulary.dueDate = new Date();
+        vocabulary.dueDate.setHours(0, 0, 0, 0);
+        vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + nextDueIn);
+      } else {
+        vocabulary.level = 7;
+        vocabulary.dueDate = new Date(9999, 12, 31);
+      }
+      await this._vocabulariesRepository.update(id, vocabulary);
     }
-
-    await this._vocabulariesRepository.update(id, vocabulary);
   }
 
-  async vocabUnknown(id: string): Promise<void> {
-    const vocabulary = await this.findOne(id);
-    if (vocabulary.level > 1) {
-      vocabulary.level -= 1;
-      vocabulary.dueDate = new Date();
-      vocabulary.dueDate.setHours(0, 0, 0, 0);
-      vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + 1);
+  async vocabUnknown(id: string, user: User): Promise<void> {
+    const vocabulary = await this.findOne(id, user);
+
+    if (vocabulary) {
+      if (vocabulary.level > 1) {
+        vocabulary.level -= 1;
+        vocabulary.dueDate = new Date();
+        vocabulary.dueDate.setHours(0, 0, 0, 0);
+        vocabulary.dueDate.setDate(vocabulary.dueDate.getDate() + 1);
+      }
+      await this._vocabulariesRepository.update(id, vocabulary);
     }
-
-    await this._vocabulariesRepository.update(id, vocabulary);
   }
 
-  async getLessonVocabulary(id: string): Promise<Vocabulary[]> {
-    return this._vocabulariesRepository.find({ where: { lesson: id } });
+  async getLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {
+    return this._vocabulariesRepository.find({ where: { lesson: id, username: user } });
   }
 
-  async getDueLessonVocabulary(id: string): Promise<Vocabulary[]> {
+  async getDueLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {
     // return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
     const currentDate = new Date();
-    const lessonVocabulary: ReadonlyArray<Vocabulary> = await this.getLessonVocabulary(id);
+    const lessonVocabulary: ReadonlyArray<Vocabulary> = await this.getLessonVocabulary(id, user);
     return lessonVocabulary.filter(vocab => {
       return vocab.dueDate < currentDate;
     });

@@ -1,33 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { Lesson } from './lesson.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { Vocabulary } from '../vocabulary/vocabulary.entity';
+import { Lesson } from './lesson.entity';
+import { User } from 'src/users/user.entity';
+
 
 @Injectable()
 export class LessonsService {
   constructor(
     @InjectRepository(Lesson)
     private _lessonRepository: Repository<Lesson>,
-  ) {}
+  ) { }
 
-  async findAll(): Promise<Lesson[]> {
-    return this._lessonRepository.find();
+  async findAll(user: User): Promise<Lesson[]> {
+    return this._lessonRepository.find({ where: { username: user.username } });
   }
 
-  async findOne(id: string): Promise<Lesson> {
-    return this._lessonRepository.findOne(id);
+  async findOne(id: string, user: User): Promise<Lesson> {
+    return this._lessonRepository.findOne({ where: { id: id, username: user.username } });
   }
 
-  async remove(id: string): Promise<void> {
-    await this._lessonRepository.delete(id);
+  async remove(id: string, user: User): Promise<void> {
+    const lesson: Lesson = await this.findOne(id, user);
+    if (lesson) await this._lessonRepository.delete(id);
   }
 
-  async create(createLessonDto: CreateLessonDto): Promise<Lesson> {
-    const lesson = new Lesson();
-    lesson.user = createLessonDto.user;
+  async create(createLessonDto: CreateLessonDto, user: User): Promise<Lesson> {
+    const lesson: Lesson = new Lesson();
+    lesson.username = user.username;
     lesson.title = createLessonDto.title;
     lesson.language_a = createLessonDto.language_a;
     lesson.language_b = createLessonDto.language_b;
@@ -35,12 +37,14 @@ export class LessonsService {
     return await this._lessonRepository.save(lesson);
   }
 
-  async update(id: string, updateLessonDto: UpdateLessonDto): Promise<void> {
-    const lesson = new Lesson();
-    (lesson.title = updateLessonDto.title),
-      (lesson.language_a = updateLessonDto.language_a);
-    lesson.language_b = updateLessonDto.language_b;
+  async update(id: string, updateLessonDto: UpdateLessonDto, user: User): Promise<void> {
+    const lesson: Lesson = await this.findOne(id, user);
+    if (lesson) {
+      lesson.title = updateLessonDto.title;
+      lesson.language_a = updateLessonDto.language_a;
+      lesson.language_b = updateLessonDto.language_b;
 
-    await this._lessonRepository.update(id, lesson);
+      await this._lessonRepository.update(id, lesson);
+    }
   }
 }

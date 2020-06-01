@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, UsePipes, ValidationPipe, Request } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './lesson.entity';
 import { LessonsService } from './lessons.service';
+import { User } from 'src/users/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('lessons')
@@ -11,29 +12,34 @@ export class LessonsController {
   constructor(private _lessonsService: LessonsService) {}
 
   @Get()
-  async findAll(): Promise<Lesson[]> {
-    return this._lessonsService.findAll();
+  async findAll(@Request() request: Request): Promise<Lesson[]> { 
+    const user: User = request['user'];
+    return this._lessonsService.findAll(user);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Lesson> {
-    return this._lessonsService.findOne(id);
+  async findOne(@Request() request: Request, @Param('id') id: string): Promise<Lesson> {
+    const user: User = request['user'];
+    return this._lessonsService.findOne(id, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this._lessonsService.remove(id);
+  remove(@Request() request: Request, @Param('id') id: string): Promise<void> {
+    const user: User = request['user'];
+    return this._lessonsService.remove(id, user);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  async create(@Body() createLessonDto: CreateLessonDto) {
-    this._lessonsService.create(createLessonDto);
+  async create(@Request() request: Request, @Body() createLessonDto: CreateLessonDto) {
+    const user: User = request['user'];
+    this._lessonsService.create(createLessonDto, user);
   }
 
   @Patch(':id')
   @UsePipes(ValidationPipe)
-  update(@Param('id') id: string, @Body() updateLessonDto: UpdateLessonDto) {
-    return this._lessonsService.update(id, updateLessonDto);
+  update(@Request() request: Request, @Param('id') id: string, @Body() updateLessonDto: UpdateLessonDto) {
+    const user: User = request['user'];
+    return this._lessonsService.update(id, updateLessonDto, user);
   }
 }

@@ -1,11 +1,5 @@
 /* istanbul ignore file */
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  AfterLoad,
-} from 'typeorm';
+import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Vocabulary } from '../vocabulary/vocabulary.entity';
 
 @Entity()
@@ -14,7 +8,7 @@ export class Lesson {
   id: number;
 
   @Column()
-  user: string;
+  username: string;
 
   @Column()
   title: string;
