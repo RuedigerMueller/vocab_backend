@@ -1,6 +1,9 @@
 import { Lesson } from './lesson.entity';
 import { initialLessonRepository, addLesson } from './lessons.test.data';
 import { FindManyOptions } from 'typeorm';
+import { json } from 'express';
+import { User } from 'src/users/user.entity';
+import { UserRepositoryMock } from 'src/users/user.repository.mock';
 
 export class LessonRepositoryMock {
   private _repository: ReadonlyArray<Lesson> = [];
@@ -9,25 +12,41 @@ export class LessonRepositoryMock {
     this._repository = this._repository.concat(initialLessonRepository);
   }
 
-  async find(options?: FindManyOptions<any>): Promise<ReadonlyArray<Lesson>> {
-    //if(!options) {
-    return this._repository; 
-    //}
-    /*else {
-            const result: Array<Lesson> = initialLessonRepository.filter(lesson => {
-                if((lesson.id === 1) || (lesson.id === 2)) {
-                  return false;
-                } else {
-                  return true;
-                }
-              });
-              return result;
-        }
-        */
+  getIDfromQuery(query: string): number {
+    // { where: { id: '0', username: 'john' } }
+    const conditions: string = query['where'];
+    return parseInt(conditions['id']);
   }
 
-  async findOne(id: string): Promise<Lesson> {
-    return this._repository.find(lesson => lesson.id === parseInt(id));
+  getUserfromQUery(query: string): User {
+     // { where: { id: '0', username: 'john' } }
+     const conditions: string = query['where'];
+    return conditions['user'];
+  }
+
+  // async find(options?: FindManyOptions<any>): Promise<ReadonlyArray<Lesson>> {
+  async find(query: string): Promise<ReadonlyArray<Lesson>> {
+    const user: User = this.getUserfromQUery(query);
+
+    return this._repository.filter(lesson => {
+      if (lesson.user.id === user.id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  async findOne(query: string): Promise<Lesson> {
+    const id: number = this.getIDfromQuery(query);
+    const user: User = this.getUserfromQUery(query);
+    return this._repository.find(lesson => {
+      if ((lesson.id === id) && (lesson.user.id === user.id)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
   async delete(id: string): Promise<void> {
@@ -48,7 +67,13 @@ export class LessonRepositoryMock {
   }
 
   async update(id: string, lesson: Lesson) {
-    const before: Lesson = await this.findOne(id);
+    const before: Lesson = this._repository.find(lesson => {
+      if ((lesson.id === parseInt(id))) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     lesson.id = parseInt(id);
     lesson.user = before.user;
     lesson.title = lesson.title ? lesson.title : before.title;

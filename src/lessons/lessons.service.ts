@@ -14,11 +14,11 @@ export class LessonsService {
   ) { }
 
   async findAll(user: User): Promise<Lesson[]> {
-    return this._lessonRepository.find({ where: { username: user.username } });
+    return this._lessonRepository.find({ where: { user: user } });
   }
 
   async findOne(id: string, user: User): Promise<Lesson> {
-    return this._lessonRepository.findOne({ where: { id: id, username: user.username } });
+    return this._lessonRepository.findOne({ where: { id: id, user: user } });
   }
 
   async remove(id: string, user: User): Promise<void> {

@@ -22,6 +22,7 @@ export class VocabularyService {
   }
 
   findOne(id: string, user: User): Promise<Vocabulary> {
+    console.log(id, user);
     return this._vocabulariesRepository.findOne({ where: { id: id, username: user.username } });
   }
 

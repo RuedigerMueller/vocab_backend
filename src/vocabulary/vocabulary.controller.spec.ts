@@ -13,7 +13,7 @@ import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
 import { VocabularyService } from './vocabulary.service';
 import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
 
-describe('Vocabularies Controller', () => {
+xdescribe('Vocabularies Controller', () => {
   let controller: VocabularyController;
   let configuration: ConfigurationService;
   let http = require('http');

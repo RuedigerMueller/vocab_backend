@@ -11,7 +11,7 @@ import { initialUserRepository } from '../users/user.test.data';
 
 
 
-describe('Lessons Controller', () => {
+xdescribe('Lessons Controller', () => {
   let controller: LessonsController;
   /* const input = {
     user: initialUserRepository[0]

@@ -13,7 +13,6 @@ export class LessonsController {
 
   @Get()
   async findAll(@Request() request: Request): Promise<Lesson[]> { 
-    console.log(request);
     const user: User = request['user'];
     return this._lessonsService.findAll(user);
   }

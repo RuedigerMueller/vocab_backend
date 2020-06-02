@@ -75,7 +75,7 @@ describe('LessonsService', () => {
       // we will be deleting the entry with the ID 2
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.id === 2) {
+          if ((lesson.id === 2) || (lesson.user.id !== user.id)) {
             return false;
           } else {
             return true;
@@ -97,7 +97,15 @@ describe('LessonsService', () => {
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository;
+      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
+        lesson => {
+          if (lesson.user.id !== user.id) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      );
       await service.remove('0', user);
       expect(await service.findAll(user)).toEqual(expected_result);
     });

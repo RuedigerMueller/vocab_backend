@@ -19,7 +19,7 @@ function createLesson(
 }
 
 const user_1: User = initialUserRepository.find(user => user.id === 1);
-const user_2: User = initialUserRepository.find(user => user.id === 1);
+const user_2: User = initialUserRepository.find(user => user.id === 2);
 
 
 export let initialLessonRepository: ReadonlyArray<Lesson> = [];

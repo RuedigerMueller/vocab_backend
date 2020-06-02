@@ -13,7 +13,7 @@ import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVoc
 import { User } from '../users/user.entity';
 import { initialUserRepository } from '../users/user.test.data';
 
-describe('VocabulariesService', () => {
+xdescribe('VocabulariesService', () => {
   const user: User = initialUserRepository[0];
   let service: VocabularyService;
   let configuration : ConfigurationService;
