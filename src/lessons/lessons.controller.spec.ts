@@ -8,20 +8,16 @@ import { LessonsController } from './lessons.controller';
 import { LessonsService } from './lessons.service';
 import { addLesson, initialLessonRepository, updateLesson } from './lessons.test.data';
 import { initialUserRepository } from '../users/user.test.data';
+import { User } from 'src/users/user.entity';
 
 
 
-xdescribe('Lessons Controller', () => {
+describe('Lessons Controller', () => {
+  const user: User = initialUserRepository[0];
   let controller: LessonsController;
-  /* const input = {
-    user: initialUserRepository[0]
-  }; */
-  // let request: Request;
   let http = require('http');
   let request = new http.IncomingMessage();
-  request.data = request.data || { };
-  request.data.remoteUser = initialUserRepository[0];
-  //request['user'] = initialUserRepository[0];;
+  request.user = user;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,7 +40,15 @@ xdescribe('Lessons Controller', () => {
 
   describe('findAll', () => {
     it('should find lessons', async () => {
-      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository;
+      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
+        lesson => {
+          if (lesson.user === user) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      );
       const result = await controller.findAll(request);
 
       expect(result).toEqual(expected_result);
@@ -60,6 +64,10 @@ xdescribe('Lessons Controller', () => {
       expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
+    xit('should not find a valid ID but from different user', () => {
+
+    });
+
     it('should be undefined if the id does not exist', async () => {
       expect(await controller.findOne(request, '0')).toBeUndefined();
     });
@@ -70,7 +78,7 @@ xdescribe('Lessons Controller', () => {
       // we will be deleting the lesson with the ID 2
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.id === 2) {
+          if ((lesson.id === 2) || (lesson.user.id !== user.id)) {
             return false;
           } else {
             return true;
@@ -87,8 +95,20 @@ xdescribe('Lessons Controller', () => {
       expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
+    xit('should not remove a valid ID but from different user', () => {
+
+    });
+
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository;
+      const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
+        lesson => {
+          if (lesson.user.id !== user.id) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      );
       await controller.remove(request, '0');
       expect(await controller.findAll(request)).toEqual(expected_result);
     });
