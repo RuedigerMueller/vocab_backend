@@ -6,18 +6,17 @@ import { Lesson } from './lesson.entity';
 import { LessonRepositoryMock } from './lesson.repository.mock';
 import { LessonsController } from './lessons.controller';
 import { LessonsService } from './lessons.service';
-import { addLesson, initialLessonRepository, updateLesson } from './lessons.test.data';
+import { addLesson, initialLessonRepository, updateLesson, lesson_user_1, lesson_user_2 } from './lessons.test.data';
 import { initialUserRepository } from '../users/user.test.data';
 import { User } from 'src/users/user.entity';
 
 
 
 describe('Lessons Controller', () => {
-  const user: User = initialUserRepository[0];
   let controller: LessonsController;
   let http = require('http');
   let request = new http.IncomingMessage();
-  request.user = user;
+  request.user = lesson_user_1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +41,7 @@ describe('Lessons Controller', () => {
     it('should find lessons', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user === user) {
+          if (lesson.user === lesson_user_1) {
             return true;
           } else {
             return false;
@@ -64,8 +63,8 @@ describe('Lessons Controller', () => {
       expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
-    xit('should not find a valid ID but from different user', () => {
-
+    it('should not find a valid ID but from different user', async () => {
+      expect(await controller.findOne(request, '6')).toBeUndefined();
     });
 
     it('should be undefined if the id does not exist', async () => {
@@ -78,7 +77,7 @@ describe('Lessons Controller', () => {
       // we will be deleting the lesson with the ID 2
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if ((lesson.id === 2) || (lesson.user.id !== user.id)) {
+          if ((lesson.id === 2) || (lesson.user.id !== lesson_user_1.id)) {
             return false;
           } else {
             return true;
@@ -95,14 +94,20 @@ describe('Lessons Controller', () => {
       expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
-    xit('should not remove a valid ID but from different user', () => {
+    it('should not remove a valid ID but from different user', async () => {
+      let request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lesson_user_2;
+      expect(await controller.findOne(request_user_2, '6')).toBeDefined();
 
+      await controller.remove(request, '6');
+
+      expect(await controller.findOne(request_user_2, '6')).toBeDefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user.id !== user.id) {
+          if (lesson.user.id !== lesson_user_1.id) {
             return false;
           } else {
             return true;
@@ -134,6 +139,19 @@ describe('Lessons Controller', () => {
   });
 
   describe('update', () => {
+    const updateCheck = async () => {
+      const allLessons = await controller.findAll(request);
+      const searchResult: Lesson = allLessons.find(
+        lesson => lesson.id === updateLesson.id,
+      );
+      expect(searchResult).toBeDefined();
+      expect(searchResult.id).toBe(updateLesson.id);
+      expect(searchResult.user).toBe(updateLesson.user);
+      expect(searchResult.title).toBe(updateLesson.title);
+      expect(searchResult.language_a).toBe(updateLesson.language_a);
+      expect(searchResult.language_b).toBe(updateLesson.language_b);
+    };
+
     it('should update the lesson', async () => {
       const lesson: UpdateLessonDto = {
         title: updateLesson.title,
@@ -142,16 +160,47 @@ describe('Lessons Controller', () => {
       };
 
       await controller.update(request, updateLesson.id.toString(), lesson);
-      const allLessons = await controller.findAll(request);
-      const searchResult: Lesson = allLessons.find(
-        lesson => lesson.id === updateLesson.id,
-      );
-      expect(searchResult).toBeDefined();
-      expect(searchResult.id).toBe(updateLesson.id);
-      expect(searchResult.user).toBe(updateLesson.user);
-      expect(searchResult.title).toStrictEqual(updateLesson.title);
-      expect(searchResult.language_a).toBe(updateLesson.language_a);
-      expect(searchResult.language_b).toBe(updateLesson.language_b);
+      updateCheck();
+    });
+
+    it('should not update a valid ID but from different user', async () => {
+      const lesson_before: Lesson = await controller.findOne(request, updateLesson.id.toString());
+
+      const lesson_in: UpdateLessonDto = {
+        title: updateLesson.title,
+        language_a: updateLesson.language_a,
+        language_b: updateLesson.language_b,
+      };
+
+      let request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lesson_user_2;
+
+      await controller.update(request_user_2, updateLesson.id.toString(), lesson_in);
+
+      const lesson_after: Lesson = await controller.findOne(request, updateLesson.id.toString());
+
+      expect(lesson_before).toEqual(lesson_after);
+    });
+
+    it('should update the lesson with partial information - language_a empty', async () => {
+      const lesson_in: UpdateLessonDto = {
+        title: '',
+        language_a: '',
+        language_b: updateLesson.language_b,
+      };
+
+      await controller.update(request, updateLesson.id.toString(), lesson_in);
+      updateCheck();
+    });
+
+    it('should update the vocabulary with partial information - language_a & b empty', async () => {
+      const lesson_in: UpdateLessonDto = {
+        title: updateLesson.title,
+        language_a: '',
+        language_b: '',
+      };
+      await controller.update(request, updateLesson.id.toString(), lesson_in);
+      updateCheck();
     });
   });
 });

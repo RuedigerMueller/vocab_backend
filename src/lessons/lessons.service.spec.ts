@@ -1,19 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LessonsService } from './lessons.service';
-import { Lesson } from './lesson.entity';
-import { LessonRepositoryMock } from './lesson.repository.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import {
-  initialLessonRepository,
-  addLesson,
-  updateLesson,
-  lesson_user_1,
-  lesson_user_2,
-} from './lessons.test.data';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { User } from '../users/user.entity';
-import { initialUserRepository } from '../users/user.test.data';
+import { Lesson } from './lesson.entity';
+import { LessonRepositoryMock } from './lesson.repository.mock';
+import { LessonsService } from './lessons.service';
+import { addLesson, initialLessonRepository, lesson_user_1, lesson_user_2, updateLesson } from './lessons.test.data';
 
 describe('LessonsService', () => {
   let service: LessonsService;
