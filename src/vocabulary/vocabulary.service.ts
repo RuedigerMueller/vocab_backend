@@ -18,12 +18,11 @@ export class VocabularyService {
   ) { }
 
   async findAll(user: User): Promise<Vocabulary[]> {
-    return this._vocabulariesRepository.find({ where: { username: user.username } });
+    return this._vocabulariesRepository.find({ where: { user: user } });
   }
 
   findOne(id: string, user: User): Promise<Vocabulary> {
-    console.log(id, user);
-    return this._vocabulariesRepository.findOne({ where: { id: id, username: user.username } });
+    return this._vocabulariesRepository.findOne({ where: { id: id, user: user } });
   }
 
   async remove(id: string, user: User): Promise<void> {
@@ -103,7 +102,7 @@ export class VocabularyService {
   }
 
   async getLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {
-    return this._vocabulariesRepository.find({ where: { lesson: id, username: user } });
+    return this._vocabulariesRepository.find({ where: { lesson: id, user: user } });
   }
 
   async getDueLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {

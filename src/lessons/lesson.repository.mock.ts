@@ -1,9 +1,6 @@
-import { Lesson } from './lesson.entity';
-import { initialLessonRepository, addLesson } from './lessons.test.data';
-import { FindManyOptions } from 'typeorm';
-import { json } from 'express';
 import { User } from 'src/users/user.entity';
-import { UserRepositoryMock } from 'src/users/user.repository.mock';
+import { Lesson } from './lesson.entity';
+import { addLesson, initialLessonRepository } from './lessons.test.data';
 
 export class LessonRepositoryMock {
   private _repository: ReadonlyArray<Lesson> = [];
@@ -24,7 +21,6 @@ export class LessonRepositoryMock {
     return conditions['user'];
   }
 
-  // async find(options?: FindManyOptions<any>): Promise<ReadonlyArray<Lesson>> {
   async find(query: string): Promise<ReadonlyArray<Lesson>> {
     const user: User = this.getUserfromQUery(query);
 

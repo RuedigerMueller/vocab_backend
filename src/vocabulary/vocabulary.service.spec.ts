@@ -13,7 +13,7 @@ import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVoc
 import { User } from '../users/user.entity';
 import { initialUserRepository } from '../users/user.test.data';
 
-xdescribe('VocabulariesService', () => {
+describe('VocabulariesService', () => {
   const user: User = initialUserRepository[0];
   let service: VocabularyService;
   let configuration : ConfigurationService;
@@ -48,7 +48,7 @@ xdescribe('VocabulariesService', () => {
     it('should return an array of vocabularies', async () => {
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         vocab => {
-          if (vocab.user === user) {
+          if (vocab.user.id === user.id) {
             return true;
           } else {
             return false;
@@ -85,7 +85,7 @@ xdescribe('VocabulariesService', () => {
       // we will be deleting the entry with the ID 2
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         vocab => {
-          if (vocab.id === 2) {
+          if ((vocab.id === 2) || (vocab.user.id !== user.id)) {
             return false;
           } else {
             return true;
@@ -107,7 +107,15 @@ xdescribe('VocabulariesService', () => {
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      const expected_result: ReadonlyArray<Vocabulary> = initialVocabularyRepository.filter(
+        lesson => {
+          if (lesson.user.id !== user.id) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      );
       await service.remove('0', user);
       expect(await service.findAll(user)).toEqual(expected_result);
     });
