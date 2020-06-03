@@ -18,34 +18,34 @@ function createLesson(
   return lesson;
 }
 
-const user_1: User = initialUserRepository.find(user => user.id === 1);
-const user_2: User = initialUserRepository.find(user => user.id === 2);
+export const lesson_user_1: User = initialUserRepository.find(user => user.id === 1);
+export const lesson_user_2: User = initialUserRepository.find(user => user.id === 2);
 
 
 export let initialLessonRepository: ReadonlyArray<Lesson> = [];
 
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(1, user_1, 'Lesson 1', 'English', 'Deutsch'),
+  createLesson(1, lesson_user_1, 'Lesson 1', 'English', 'Deutsch'),
 );
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(2, user_1, 'Lesson 2', 'English', 'Deutsch'),
+  createLesson(2, lesson_user_1, 'Lesson 2', 'English', 'Deutsch'),
 );
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(3, user_1, 'Lesson 3', 'English', 'Deutsch'),
+  createLesson(3, lesson_user_1, 'Lesson 3', 'English', 'Deutsch'),
 );
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(4, user_1, 'Unidad 1', 'Español', 'Deutsch'),
+  createLesson(4, lesson_user_1, 'Unidad 1', 'Español', 'Deutsch'),
 );
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(5, user_1, 'Lektion 1', 'Deutsch', 'Español'),
+  createLesson(5, lesson_user_1, 'Lektion 1', 'Deutsch', 'Español'),
 );
 initialLessonRepository = initialLessonRepository.concat(
-  createLesson(6, user_2, 'Lesson 2', 'Español', 'Deutsch'),
+  createLesson(6, lesson_user_2, 'Lesson 2', 'Español', 'Deutsch'),
 );
 
 export const addLesson: Lesson = createLesson(
   7,
-  user_1,
+  lesson_user_1,
   'Lesson 4',
   'English',
   'Deutsch',
