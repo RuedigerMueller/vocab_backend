@@ -23,41 +23,42 @@ function createVocabulary(
   return vocabulary;
 }
 
-//const user: User = initialUserRepository.find(user => user.id === 1);
-const lesson: Lesson = initialLessonRepository.find(lesson => lesson.id === 1);
-const user: User = lesson.user;
+const lesson_1: Lesson = initialLessonRepository.find(lesson => lesson.id === 1);
+const lesson_6: Lesson = initialLessonRepository.find(lesson => lesson.id === 6);
+export const vocabularyUser_1: User = lesson_1.user;
+export const vocabularyUser_2: User = lesson_6.user;
 
 export let initialVocabularyRepository: ReadonlyArray<Vocabulary> = [];
 
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(1, user, 'house', 'Haus', 1, new Date(2020, 2, 29), lesson),
+  createVocabulary(1, vocabularyUser_1, 'house', 'Haus', 1, new Date(2020, 2, 29), lesson_1),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(2, user, 'mouse', 'Maus', 2, new Date(2020, 3, 1), lesson),
+  createVocabulary(2, vocabularyUser_1, 'mouse', 'Maus', 2, new Date(2020, 3, 1), lesson_1),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(3, user, 'key', 'Schlüssel', 1, new Date(9999, 12, 31), lesson),
+  createVocabulary(3, vocabularyUser_1, 'key', 'Schlüssel', 1, new Date(9999, 12, 31), lesson_1),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(4, user, 'city', 'Stadt', 1, new Date(9999, 12, 31), lesson),
+  createVocabulary(4, vocabularyUser_1, 'city', 'Stadt', 1, new Date(9999, 12, 31), lesson_1),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(5, user, 'car', 'Auto', 7, new Date(2020, 3, 1), lesson),
+  createVocabulary(5, vocabularyUser_1, 'car', 'Auto', 7, new Date(2020, 3, 1), lesson_1),
 );
 initialVocabularyRepository = initialVocabularyRepository.concat(
-  createVocabulary(6, user, 'sausage', 'Wurst', 1, new Date(9999, 12, 31), lesson),
+  createVocabulary(6, vocabularyUser_1, 'sausage', 'Wurst', 1, new Date(9999, 12, 31), lesson_1),
 );
 
 let dueDate = new Date();
 dueDate.setHours(0,0,0,0);
 export const addVocabulary: Vocabulary = createVocabulary(
   10,
-  user,
+  vocabularyUser_1,
   'pineapple',
   'Ananas',
   1,
   dueDate,
-  lesson,
+  lesson_1,
 );
 
 export const updateVocabulary: Vocabulary = initialVocabularyRepository.find(

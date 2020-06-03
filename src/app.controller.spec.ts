@@ -41,6 +41,5 @@ describe('App Controller', () => {
   });
 
   xit('should be unit tested', () => {
-    expect(service).toBeDefined();
   });
 });

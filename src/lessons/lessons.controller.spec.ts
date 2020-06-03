@@ -6,7 +6,7 @@ import { Lesson } from './lesson.entity';
 import { LessonRepositoryMock } from './lesson.repository.mock';
 import { LessonsController } from './lessons.controller';
 import { LessonsService } from './lessons.service';
-import { addLesson, initialLessonRepository, updateLesson, lesson_user_1, lesson_user_2 } from './lessons.test.data';
+import { addLesson, initialLessonRepository, updateLesson, lessonUser_1, lessonUser_2 } from './lessons.test.data';
 import { initialUserRepository } from '../users/user.test.data';
 import { User } from 'src/users/user.entity';
 
@@ -16,7 +16,7 @@ describe('Lessons Controller', () => {
   let controller: LessonsController;
   let http = require('http');
   let request = new http.IncomingMessage();
-  request.user = lesson_user_1;
+  request.user = lessonUser_1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -41,7 +41,7 @@ describe('Lessons Controller', () => {
     it('should find lessons', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user === lesson_user_1) {
+          if (lesson.user === lessonUser_1) {
             return true;
           } else {
             return false;
@@ -77,7 +77,7 @@ describe('Lessons Controller', () => {
       // we will be deleting the lesson with the ID 2
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if ((lesson.id === 2) || (lesson.user.id !== lesson_user_1.id)) {
+          if ((lesson.id === 2) || (lesson.user.id !== lessonUser_1.id)) {
             return false;
           } else {
             return true;
@@ -96,7 +96,7 @@ describe('Lessons Controller', () => {
 
     it('should not remove a valid ID but from different user', async () => {
       let request_user_2 = new http.IncomingMessage();
-      request_user_2.user = lesson_user_2;
+      request_user_2.user = lessonUser_2;
       expect(await controller.findOne(request_user_2, '6')).toBeDefined();
 
       await controller.remove(request, '6');
@@ -107,7 +107,7 @@ describe('Lessons Controller', () => {
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user.id !== lesson_user_1.id) {
+          if (lesson.user.id !== lessonUser_1.id) {
             return false;
           } else {
             return true;
@@ -173,7 +173,7 @@ describe('Lessons Controller', () => {
       };
 
       let request_user_2 = new http.IncomingMessage();
-      request_user_2.user = lesson_user_2;
+      request_user_2.user = lessonUser_2;
 
       await controller.update(request_user_2, updateLesson.id.toString(), lesson_in);
 

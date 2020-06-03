@@ -5,7 +5,7 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { Lesson } from './lesson.entity';
 import { LessonRepositoryMock } from './lesson.repository.mock';
 import { LessonsService } from './lessons.service';
-import { addLesson, initialLessonRepository, lesson_user_1, lesson_user_2, updateLesson } from './lessons.test.data';
+import { addLesson, initialLessonRepository, lessonUser_1, lessonUser_2, updateLesson } from './lessons.test.data';
 
 describe('LessonsService', () => {
   let service: LessonsService;
@@ -32,14 +32,14 @@ describe('LessonsService', () => {
     it('should return an array of lessons', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user === lesson_user_1) {
+          if (lesson.user === lessonUser_1) {
             return true;
           } else {
             return false;
           }
         },
       );
-      const result = await service.findAll(lesson_user_1);
+      const result = await service.findAll(lessonUser_1);
 
       expect(result).toEqual(expected_result);
       expect(result.length).toBe(expected_result.length);
@@ -51,15 +51,15 @@ describe('LessonsService', () => {
       const expected_result: Lesson = initialLessonRepository.find(
         lesson => lesson.id === 2,
       );
-      expect(await service.findOne('2', lesson_user_1),).toEqual(expected_result);
+      expect(await service.findOne('2', lessonUser_1),).toEqual(expected_result);
     });
 
     it('should not find a valid ID but from different user', async() => {
-      expect(await service.findOne('1', lesson_user_2)).toBeUndefined();
+      expect(await service.findOne('1', lessonUser_2)).toBeUndefined();
     });
 
     it('should be undefined if the id does not exist', async () => {
-      expect(await service.findOne('0', lesson_user_1)).toBeUndefined();
+      expect(await service.findOne('0', lessonUser_1)).toBeUndefined();
     });
   });
 
@@ -68,7 +68,7 @@ describe('LessonsService', () => {
       // we will be deleting the entry with the ID 2
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if ((lesson.id === 2) || (lesson.user.id !== lesson_user_1.id)) {
+          if ((lesson.id === 2) || (lesson.user.id !== lessonUser_1.id)) {
             return false;
           } else {
             return true;
@@ -76,35 +76,35 @@ describe('LessonsService', () => {
         },
       );
 
-      const entries_before = (await service.findAll(lesson_user_1)).length;
-      await service.remove('2', lesson_user_1);
+      const entries_before = (await service.findAll(lessonUser_1)).length;
+      await service.remove('2', lessonUser_1);
 
-      const after_remove: ReadonlyArray<Lesson> = await service.findAll(lesson_user_1);
+      const after_remove: ReadonlyArray<Lesson> = await service.findAll(lessonUser_1);
       expect(after_remove).toEqual(expected_result);
       expect(after_remove.length).toEqual(entries_before - 1);
-      expect(await service.findOne('2', lesson_user_1)).toBeUndefined();
+      expect(await service.findOne('2', lessonUser_1)).toBeUndefined();
     });
 
     it('should not remove a valid ID but from different user', async() => {
-      expect(await service.findOne('6', lesson_user_2)).toBeDefined();
+      expect(await service.findOne('6', lessonUser_2)).toBeDefined();
 
-      await service.remove('6', lesson_user_1);
+      await service.remove('6', lessonUser_1);
 
-      expect(await service.findOne('6', lesson_user_2)).toBeDefined();
+      expect(await service.findOne('6', lessonUser_2)).toBeDefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: ReadonlyArray<Lesson> = initialLessonRepository.filter(
         lesson => {
-          if (lesson.user.id !== lesson_user_1.id) {
+          if (lesson.user.id !== lessonUser_1.id) {
             return false;
           } else {
             return true;
           }
         },
       );
-      await service.remove('0', lesson_user_1);
-      expect(await service.findAll(lesson_user_1)).toEqual(expected_result);
+      await service.remove('0', lessonUser_1);
+      expect(await service.findAll(lessonUser_1)).toEqual(expected_result);
     });
   });
 
@@ -116,14 +116,14 @@ describe('LessonsService', () => {
         language_b: addLesson.language_b,
       };
 
-      const result: Lesson = await service.create(lesson_in, lesson_user_1);
+      const result: Lesson = await service.create(lesson_in, lessonUser_1);
 
       expect(result.user).toEqual(addLesson.user);
       expect(result.title).toEqual(addLesson.title);
       expect(result.language_a).toEqual(addLesson.language_a);
       expect(result.language_b).toEqual(addLesson.language_b);
 
-      const allLessons = await service.findAll(lesson_user_1);
+      const allLessons = await service.findAll(lessonUser_1);
 
       //ToDo improve search
       const searchResult: Lesson = allLessons.find(
@@ -135,7 +135,7 @@ describe('LessonsService', () => {
 
   describe('update', () => {
     const updateCheck = async () => {
-      const allLessons = await service.findAll(lesson_user_1);
+      const allLessons = await service.findAll(lessonUser_1);
       const searchResult: Lesson = allLessons.find(
         lesson => lesson.id === updateLesson.id,
       );
@@ -154,12 +154,12 @@ describe('LessonsService', () => {
         language_b: updateLesson.language_b,
       };
 
-      await service.update(updateLesson.id.toString(), lesson_in, lesson_user_1);
+      await service.update(updateLesson.id.toString(), lesson_in, lessonUser_1);
       updateCheck();
     });
 
     it('should not update a valid ID but from different user', async () => {
-      const lesson_before: Lesson = await service.findOne(updateLesson.id.toString(), lesson_user_1);
+      const lesson_before: Lesson = await service.findOne(updateLesson.id.toString(), lessonUser_1);
 
       const lesson_in: UpdateLessonDto = {
         title: updateLesson.title,
@@ -167,9 +167,9 @@ describe('LessonsService', () => {
         language_b: updateLesson.language_b,
       };
 
-      await service.update(updateLesson.id.toString(), lesson_in, lesson_user_2);
+      await service.update(updateLesson.id.toString(), lesson_in, lessonUser_2);
 
-      const lesson_after: Lesson = await service.findOne(updateLesson.id.toString(), lesson_user_1);
+      const lesson_after: Lesson = await service.findOne(updateLesson.id.toString(), lessonUser_1);
 
       expect(lesson_before).toEqual(lesson_after);
     });
@@ -181,7 +181,7 @@ describe('LessonsService', () => {
         language_b: updateLesson.language_b,
       };
 
-      await service.update(updateLesson.id.toString(), lesson_in, lesson_user_1);
+      await service.update(updateLesson.id.toString(), lesson_in, lessonUser_1);
       updateCheck();
     });
 
@@ -191,7 +191,7 @@ describe('LessonsService', () => {
         language_a: '',
         language_b: '',
       };
-      await service.update(updateLesson.id.toString(), lesson_in, lesson_user_1);
+      await service.update(updateLesson.id.toString(), lesson_in, lessonUser_1);
       updateCheck();
     });
   });
