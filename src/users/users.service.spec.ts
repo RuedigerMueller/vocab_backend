@@ -25,7 +25,7 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  xdescribe('should be unit tested', () => {
-
+  xit('should be unit tested', () => {
+    expect(service).toBeDefined();
   });
 });
