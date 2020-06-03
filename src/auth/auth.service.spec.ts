@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { UserRepositoryMock } from '../users/user.repository.mock';
-import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
@@ -16,7 +15,6 @@ describe('AuthService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        UsersModule,
         PassportModule,
         JwtModule.register({
           secret: jwtConstants.secret,
@@ -37,7 +35,11 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  xit('should be defined', () => {
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  xit('should be unit tested', () => {
     expect(service).toBeDefined();
   });
 });
