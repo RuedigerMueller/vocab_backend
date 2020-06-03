@@ -14,8 +14,8 @@ import { User } from 'src/users/user.entity';
 
 describe('Lessons Controller', () => {
   let controller: LessonsController;
-  let http = require('http');
-  let request = new http.IncomingMessage();
+  const http = require('http');
+  const request = new http.IncomingMessage();
   request.user = lessonUser_1;
 
   beforeEach(async () => {
@@ -95,7 +95,7 @@ describe('Lessons Controller', () => {
     });
 
     it('should not remove a valid ID but from different user', async () => {
-      let request_user_2 = new http.IncomingMessage();
+      const request_user_2 = new http.IncomingMessage();
       request_user_2.user = lessonUser_2;
       expect(await controller.findOne(request_user_2, '6')).toBeDefined();
 
@@ -172,7 +172,7 @@ describe('Lessons Controller', () => {
         language_b: updateLesson.language_b,
       };
 
-      let request_user_2 = new http.IncomingMessage();
+      const request_user_2 = new http.IncomingMessage();
       request_user_2.user = lessonUser_2;
 
       await controller.update(request_user_2, updateLesson.id.toString(), lesson_in);

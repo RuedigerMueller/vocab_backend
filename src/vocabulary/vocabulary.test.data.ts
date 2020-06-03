@@ -49,6 +49,10 @@ initialVocabularyRepository = initialVocabularyRepository.concat(
   createVocabulary(6, vocabularyUser_1, 'sausage', 'Wurst', 1, new Date(9999, 12, 31), lesson_1),
 );
 
+initialVocabularyRepository = initialVocabularyRepository.concat(
+  createVocabulary(7, vocabularyUser_2, 'sausage', 'Wurst', 1, new Date(9999, 12, 31), lesson_6),
+);
+
 let dueDate = new Date();
 dueDate.setHours(0,0,0,0);
 export const addVocabulary: Vocabulary = createVocabulary(

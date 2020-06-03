@@ -4,23 +4,21 @@ import { ConfigurationService } from '../configuration/configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
 import { LessonsService } from '../lessons/lessons.service';
-import { initialUserRepository } from '../users/user.test.data';
+import { lessonUser_2 } from '../lessons/lessons.test.data';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { VocabularyController } from './vocabulary.controller';
 import { Vocabulary } from './vocabulary.entity';
 import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
 import { VocabularyService } from './vocabulary.service';
-import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
-import { User } from 'src/users/user.entity';
+import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest, vocabularyUser_1 } from './vocabulary.test.data';
 
 describe('Vocabularies Controller', () => {
-  const user: User = initialUserRepository[0];
   let controller: VocabularyController;
   let configuration: ConfigurationService;
-  let http = require('http');
-  let request = new http.IncomingMessage();
-  request.user = user;
+  const http = require('http');
+  const request = new http.IncomingMessage();
+  request.user = vocabularyUser_1;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -52,7 +50,7 @@ describe('Vocabularies Controller', () => {
     it('should find vocabularies', async () => {
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         vocab => {
-          if (vocab.user.id === user.id) {
+          if (vocab.user.id === vocabularyUser_1.id) {
             return true;
           } else {
             return false;
@@ -74,8 +72,8 @@ describe('Vocabularies Controller', () => {
       expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
-    xit('should not find a valid ID but from different user', () => {
-
+    it('should not find a valid ID but from different user', async () => {
+      expect(await controller.findOne(request, '7')).toBeUndefined();
     });
 
     it('should be undefined if the id does not exist', async () => {
@@ -88,7 +86,7 @@ describe('Vocabularies Controller', () => {
       // we will be deleting the entry with the ID 2
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         vocab => {
-          if ((vocab.id === 2) || (vocab.user.id !== user.id)) {
+          if ((vocab.id === 2) || (vocab.user.id !== vocabularyUser_1.id)) {
             return false;
           } else {
             return true;
@@ -105,14 +103,20 @@ describe('Vocabularies Controller', () => {
       expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
-    xit('should not remove a valid ID but from different user', () => {
+    it('should not remove a valid ID but from different user', async () => {
+      let request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lessonUser_2;
+      expect(await controller.findOne(request, '6')).toBeDefined();
 
+      await controller.remove(request_user_2, '6',);
+
+      expect(await controller.findOne(request, '6')).toBeDefined();
     });
 
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
       const expected_result: ReadonlyArray<Vocabulary> = initialVocabularyRepository.filter(
         lesson => {
-          if (lesson.user.id !== user.id) {
+          if (lesson.user.id !== vocabularyUser_1.id) {
             return false;
           } else {
             return true;
@@ -144,6 +148,19 @@ describe('Vocabularies Controller', () => {
   });
 
   describe('update', () => {
+    const updateCheck = async (update: Vocabulary) => {
+      const allVocabularies = await controller.findAll(request);
+      const searchResult: Vocabulary = allVocabularies.find(
+        vocab => vocab.id === update.id,
+      );
+      expect(searchResult).toBeDefined();
+      expect(searchResult.id).toBe(update.id);
+      expect(searchResult.language_a).toBe(update.language_a);
+      expect(searchResult.language_b).toBe(update.language_b);
+      expect(searchResult.level).toBe(update.level);
+      expect(searchResult.dueDate).toStrictEqual(update.dueDate);
+    };
+
     it('should update the vocabulary', async () => {
       const vocab: UpdateVocabularyDto = {
         language_a: updateVocabulary.language_a,
@@ -152,27 +169,54 @@ describe('Vocabularies Controller', () => {
       };
 
       await controller.update(request, updateVocabulary.id.toString(), vocab);
-      const allVocabularies = await controller.findAll(request);
-      const searchResult: Vocabulary = allVocabularies.find(
-        vocab => vocab.id === updateVocabulary.id,
-      );
-      expect(searchResult).toBeDefined();
-      expect(searchResult.id).toBe(updateVocabulary.id);
-      expect(searchResult.language_a).toBe(updateVocabulary.language_a);
-      expect(searchResult.language_b).toBe(updateVocabulary.language_b);
-      expect(searchResult.level).toBe(updateVocabulary.level);
-      expect(searchResult.dueDate).toStrictEqual(updateVocabulary.dueDate);
+      updateCheck(updateVocabulary);
     });
 
-    xit('should not update a valid ID but from different user', () => {
+    it('should not update a valid ID but from different user', async () => {
+      const vocabulary_before: Vocabulary = await controller.findOne(request, updateVocabulary.id.toString());
 
+      const vocabulary_in: UpdateVocabularyDto = {
+        language_a: updateVocabulary.language_a,
+        language_b: updateVocabulary.language_b,
+        level: updateVocabulary.level
+      };
+
+      const request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lessonUser_2;
+      
+      await controller.update(request_user_2, updateVocabulary.id.toString(), vocabulary_in,);
+
+      const vocabulary_after: Vocabulary = await controller.findOne(request, updateVocabulary.id.toString());
+
+      expect(vocabulary_before).toEqual(vocabulary_after);
+    });
+
+    it('should update the vocabulary with partial information - language_a empty', async () => {
+      const vocab: UpdateVocabularyDto = {
+        language_a: '',
+        language_b: updateVocabulary.language_b,
+        level: updateVocabulary.level,
+      };
+
+      await controller.update(request, updateVocabulary.id.toString(), vocab);
+      updateCheck(updateVocabulary);
+    });
+
+    it('should update the vocabulary with partial information - language_a & b empty', async () => {
+      const vocab: UpdateVocabularyDto = {
+        language_a: '',
+        language_b: '',
+        level: updateVocabulary.level,
+      };
+
+      await controller.update(request, updateVocabulary.id.toString(), vocab);
+      updateCheck(updateVocabulary);
     });
   });
 
   describe('vocabKnown', () => {
     it('should update the vocabulary', async () => {
-      let expected_result: Vocabulary = new Vocabulary();
-      expected_result = Object.assign({}, knownVocabulary);
+      const expected_result = knownVocabulary;
       expected_result.level += 1;
       
       const nextDueIn: number = configuration.getDueInDays(expected_result.level);
@@ -187,8 +231,14 @@ describe('Vocabularies Controller', () => {
       expect(result.dueDate).toEqual(expected_result.dueDate);
     });
 
-    xit('should not update valid vocabulary from different user', async() => {
+    it('should not update valid vocabulary from different user', async() => {
+      const expected_result = knownVocabulary;
 
+      const request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lessonUser_2;
+
+      await controller.vocabKnown(request_user_2, knownVocabulary.id.toString());
+      expect(await controller.findOne(request, knownVocabulary.id.toString())).toEqual(expected_result);
     })
     
     it('should not go above level 7', async () => {
@@ -208,8 +258,7 @@ describe('Vocabularies Controller', () => {
 
   describe('vocabUnknown', () => {
     it('should update the vocabulary', async () => {
-      let expected_result: Vocabulary = new Vocabulary();
-      expected_result = Object.assign({}, unknownVocabulary);
+      const  expected_result = unknownVocabulary;
       expected_result.level = expected_result.level - 1;
       expected_result.dueDate = new Date();
       expected_result.dueDate.setHours(0,0,0,0);
@@ -221,8 +270,14 @@ describe('Vocabularies Controller', () => {
       expect(result).toEqual(expected_result);
     });
 
-    xit('should not update valid vocabulary from different user', async() => {
+    it('should not update valid vocabulary from different user', async() => {
+      const expected_result = unknownVocabulary;
 
+      const request_user_2 = new http.IncomingMessage();
+      request_user_2.user = lessonUser_2;
+
+      await controller.vocabUnknown(request_user_2, unknownVocabulary.id.toString());
+      expect(await controller.findOne(request, unknownVocabulary.id.toString())).toEqual(expected_result);
     })
 
     it('should not go below level 1', async () => {

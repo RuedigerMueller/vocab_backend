@@ -286,9 +286,9 @@ describe('VocabulariesService', () => {
     });
 
     it('should not update valid vocabulary from different user', async() => {
-      const expected_result = knownVocabulary;
-      await service.vocabUnknown(knownVocabulary.id.toString(), vocabularyUser_2);
-      expect(await service.findOne(knownVocabulary.id.toString(), vocabularyUser_1)).toEqual(expected_result);
+      const expected_result = unknownVocabulary;
+      await service.vocabUnknown(unknownVocabulary.id.toString(), vocabularyUser_2);
+      expect(await service.findOne(unknownVocabulary.id.toString(), vocabularyUser_1)).toEqual(expected_result);
     })
 
     it('should not go below level 1', async () => {
