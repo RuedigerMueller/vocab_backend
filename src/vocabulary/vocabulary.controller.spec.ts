@@ -12,14 +12,15 @@ import { Vocabulary } from './vocabulary.entity';
 import { VocabularyRepositoryMock } from './vocabulary.repository.mock';
 import { VocabularyService } from './vocabulary.service';
 import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVocabulary, updateVocabulary, updateVocabulary_LevelTooHighTest, updateVocabulary_LevelTooLowTest } from './vocabulary.test.data';
+import { User } from 'src/users/user.entity';
 
-xdescribe('Vocabularies Controller', () => {
+describe('Vocabularies Controller', () => {
+  const user: User = initialUserRepository[0];
   let controller: VocabularyController;
   let configuration: ConfigurationService;
   let http = require('http');
   let request = new http.IncomingMessage();
-  request.data = request.data || { };
-  request.data.remoteUser = initialUserRepository[0];
+  request.user = user;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -49,7 +50,15 @@ xdescribe('Vocabularies Controller', () => {
 
   describe('findAll', () => {
     it('should find vocabularies', async () => {
-      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
+        vocab => {
+          if (vocab.user.id === user.id) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      );
       const result = await controller.findAll(request);
 
       expect(result).toEqual(expected_result);
@@ -65,6 +74,10 @@ xdescribe('Vocabularies Controller', () => {
       expect(await controller.findOne(request, '2')).toEqual(expected_result);
     });
 
+    xit('should not find a valid ID but from different user', () => {
+
+    });
+
     it('should be undefined if the id does not exist', async () => {
       expect(await controller.findOne(request, '0')).toBeUndefined();
     });
@@ -75,7 +88,7 @@ xdescribe('Vocabularies Controller', () => {
       // we will be deleting the entry with the ID 2
       const expected_result: Array<Vocabulary> = initialVocabularyRepository.filter(
         vocab => {
-          if (vocab.id === 2) {
+          if ((vocab.id === 2) || (vocab.user.id !== user.id)) {
             return false;
           } else {
             return true;
@@ -92,8 +105,20 @@ xdescribe('Vocabularies Controller', () => {
       expect(await controller.findOne(request, '2')).toBeUndefined();
     });
 
+    xit('should not remove a valid ID but from different user', () => {
+
+    });
+
     it('should leave the vocabulary unchanged if the id does not exist', async () => {
-      const expected_result: Array<Vocabulary> = [].concat(initialVocabularyRepository)
+      const expected_result: ReadonlyArray<Vocabulary> = initialVocabularyRepository.filter(
+        lesson => {
+          if (lesson.user.id !== user.id) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      );
       
       await controller.remove(request, '0');
       expect(await controller.findAll(request)).toEqual(expected_result);
@@ -138,6 +163,10 @@ xdescribe('Vocabularies Controller', () => {
       expect(searchResult.level).toBe(updateVocabulary.level);
       expect(searchResult.dueDate).toStrictEqual(updateVocabulary.dueDate);
     });
+
+    xit('should not update a valid ID but from different user', () => {
+
+    });
   });
 
   describe('vocabKnown', () => {
@@ -158,6 +187,10 @@ xdescribe('Vocabularies Controller', () => {
       expect(result.dueDate).toEqual(expected_result.dueDate);
     });
 
+    xit('should not update valid vocabulary from different user', async() => {
+
+    })
+    
     it('should not go above level 7', async () => {
       let expected_result: Vocabulary = new Vocabulary();
       expected_result = Object.assign({}, updateVocabulary_LevelTooHighTest);
@@ -187,6 +220,10 @@ xdescribe('Vocabularies Controller', () => {
 
       expect(result).toEqual(expected_result);
     });
+
+    xit('should not update valid vocabulary from different user', async() => {
+
+    })
 
     it('should not go below level 1', async () => {
       let expected_result: Vocabulary = new Vocabulary();
