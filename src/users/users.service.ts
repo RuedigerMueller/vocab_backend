@@ -12,8 +12,7 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log('Service');
-    const user: User = new User();
+     const user: User = new User();
 
     user.username = createUserDto.username;
     user.password = createUserDto.password;
@@ -29,7 +28,6 @@ export class UsersService {
   }
 
   async findbyID(id: number): Promise<User | undefined> {
-    console.log('findbyID: ',id);
     return this._userRepository.findOne({ where: { id: id } });
   }
 }
