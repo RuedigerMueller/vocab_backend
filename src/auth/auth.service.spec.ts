@@ -57,22 +57,12 @@ describe('AuthService', () => {
       expect(await service.validateUser(user_1.email, 'invalid password')).toBeNull();
     });
   })
-  describe('login', () => {
-    xit('should return the access token', async() => {
-      const result: User = await service.login(user_1);
-      expect(result['access_token']).toBeDefined();
+  
+  xdescribe('login', () => {
+    it('should return the access token', async() => {
+      // ToDo Login Test -> first need to figure out how get the secrete faked
+      /* const result: User = await service.login(user_1);
+      expect(result['access_token']).toBeDefined(); */
     });
   });
-  
-/*
-async login(user: User): Promise<User>{
-    const payload = { 
-        id: user.id,
-        username: user.username, 
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        sub: user.id };
-    user.access_token = this.jwtService.sign(payload);
-    return user; */
 });

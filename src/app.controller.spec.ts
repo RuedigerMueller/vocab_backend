@@ -39,6 +39,9 @@ describe('App Controller', () => {
     expect(appController).toBeDefined();
   });
 
-  xit('should be unit tested', () => {
-  });
+  xdescribe('login', () => {
+    it('should login', () => {
+      // ToDo Login Test -> first need to figure out how to do this type of test on auth service
+    });
+  })
 });
