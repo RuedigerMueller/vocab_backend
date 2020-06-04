@@ -25,6 +25,5 @@ import { AppService } from './app.service';
 
 export class AppModule {
   constructor(private connection: Connection) {
-    console.log(process.env)
   }
 }
