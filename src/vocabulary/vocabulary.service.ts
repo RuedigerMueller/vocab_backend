@@ -5,7 +5,7 @@ import { LessonsService } from '../lessons/lessons.service';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { Vocabulary } from './vocabulary.entity';
-import { ConfigurationService } from '../configuration/configuration.service';
+import { AppConfigurationService } from '../app-configuration/app-configuration.service';
 import { User } from '../users/user.entity';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class VocabularyService {
     @InjectRepository(Vocabulary)
     private _vocabulariesRepository: Repository<Vocabulary>,
     private _lessonsService: LessonsService,
-    private _configurationService: ConfigurationService
+    private _configurationService: AppConfigurationService
   ) { }
 
   async findAll(user: User): Promise<Vocabulary[]> {

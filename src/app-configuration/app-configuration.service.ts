@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ConfigurationService {
+export class AppConfigurationService {
     // return the number of days a vocabulary should remain on given level
     getDueInDays(level: number): number {
         let nextDueIn: number;

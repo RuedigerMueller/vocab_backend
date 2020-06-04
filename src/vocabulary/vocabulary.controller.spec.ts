@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConfigurationService } from '../configuration/configuration.service';
+import { ConfigurationService } from '../app-configuration/app-configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
 import { LessonsService } from '../lessons/lessons.service';
