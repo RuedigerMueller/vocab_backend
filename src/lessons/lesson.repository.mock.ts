@@ -15,14 +15,14 @@ export class LessonRepositoryMock {
     return parseInt(conditions['id']);
   }
 
-  getUserfromQUery(query: string): User {
+  getUserfromQuery(query: string): User {
      // { where: { id: '0', username: 'john' } }
      const conditions: string = query['where'];
     return conditions['user'];
   }
 
   async find(query: string): Promise<ReadonlyArray<Lesson>> {
-    const user: User = this.getUserfromQUery(query);
+    const user: User = this.getUserfromQuery(query);
 
     return this._repository.filter(lesson => {
       if (lesson.user.id === user.id) {
@@ -35,7 +35,7 @@ export class LessonRepositoryMock {
 
   async findOne(query: string): Promise<Lesson> {
     const id: number = this.getIDfromQuery(query);
-    const user: User = this.getUserfromQUery(query);
+    const user: User = this.getUserfromQuery(query);
     return this._repository.find(lesson => {
       if ((lesson.id === id) && (lesson.user.id === user.id)) {
         return true;

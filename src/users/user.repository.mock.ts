@@ -8,6 +8,18 @@ export class UserRepositoryMock {
       this._repository = this._repository.concat(initialUserRepository);
     }
 
+    getIDfromQuery(query: string): number {
+        // { where: { id: '0', username: 'john' } }
+        const conditions: string = query['where'];
+        return parseInt(conditions['id']);
+      }
+    
+      geteMailfromQuery(query: string): string {
+         // { where: { id: '0', username: 'john' } }
+         const conditions: string = query['where'];
+        return conditions['email'];
+      }
+
     async save(user: User): Promise<User> {
         user.id = addUser.id;
         this._repository = this._repository.concat(user);
@@ -15,10 +27,14 @@ export class UserRepositoryMock {
     }
 
     async findOne(criteria: string): Promise<User> {
-        if (criteria.search('@')) {
-            return this._repository.find(user => user.email === criteria);
+        const id: number = this.getIDfromQuery(criteria);
+        const email: string = this.geteMailfromQuery(criteria);
+        if (email) {
+            return this._repository.find(user => user.email === email);
+        } else if(id) {
+            return this._repository.find(user => user.id === id);
         } else {
-            return this._repository.find(user => user.id === parseInt(criteria));
+            return null;
         }
     }
 }

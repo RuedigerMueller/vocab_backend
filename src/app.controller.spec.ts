@@ -4,7 +4,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { jwtConstants } from './auth/constants';
 import { User } from './users/user.entity';
 import { UserRepositoryMock } from './users/user.repository.mock';
 import { UsersService } from './users/users.service';
@@ -18,7 +17,7 @@ describe('App Controller', () => {
       controllers: [AppController],
       imports: [
         JwtModule.register({
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_SECRET,
           signOptions: { expiresIn: '1800s' },
         }),
       ],

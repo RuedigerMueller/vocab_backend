@@ -31,6 +31,9 @@ function createUser(
     createUser(3, 'maria', 'guess', 'Maria', 'Muller', 'maria@example.com'),
   );
 
+  export const user_1: User = initialUserRepository.find(user => user.id === 1);
+  export const user_2: User = initialUserRepository.find(user => user.id === 2);
+
   export const addUser: User = createUser(
     4,
     'paula',

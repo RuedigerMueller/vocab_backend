@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConfigurationService } from '../app-configuration/app-configuration.service';
+import { AppConfigurationService } from '../app-configuration/app-configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
 import { LessonsService } from '../lessons/lessons.service';
@@ -15,7 +15,7 @@ import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVoc
 
 describe('Vocabularies Controller', () => {
   let controller: VocabularyController;
-  let configuration: ConfigurationService;
+  let configuration: AppConfigurationService;
   const http = require('http');
   const request = new http.IncomingMessage();
   request.user = vocabularyUser_1;
@@ -34,12 +34,12 @@ describe('Vocabularies Controller', () => {
           provide: getRepositoryToken(Lesson),
           useClass: LessonRepositoryMock,
         },
-        ConfigurationService,
+        AppConfigurationService,
       ],
     }).compile();
 
     controller = module.get<VocabularyController>(VocabularyController);
-    configuration = module.get<ConfigurationService>(ConfigurationService);
+    configuration = module.get<AppConfigurationService>(AppConfigurationService);
   });
 
   it('should be defined', () => {

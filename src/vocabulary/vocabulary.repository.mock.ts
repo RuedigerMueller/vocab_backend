@@ -15,14 +15,14 @@ export class VocabularyRepositoryMock {
     return parseInt(conditions['id']);
   }
 
-  getUserfromQUery(query: string): User {
+  getUserfromQuery(query: string): User {
      // { where: { id: '0', username: 'john' } }
      const conditions: string = query['where'];
     return conditions['user'];
   }
   
   async find(query: string): Promise<Vocabulary[]> {
-    const user: User = this.getUserfromQUery(query);
+    const user: User = this.getUserfromQuery(query);
 
     return this._repository.filter(vocabulary => {
       if (vocabulary.user.id === user.id) {
@@ -35,7 +35,7 @@ export class VocabularyRepositoryMock {
 
   async findOne(query: string): Promise<Vocabulary> {
     const id: number = this.getIDfromQuery(query);
-    const user: User = this.getUserfromQUery(query);
+    const user: User = this.getUserfromQuery(query);
     return this._repository.find(vocabulary => {
       if ((vocabulary.id === id) && (vocabulary.user.id === user.id)) {
         return true;

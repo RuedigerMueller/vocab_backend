@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConfigurationService } from '../app-configuration/app-configuration.service';
+import { AppConfigurationService } from '../app-configuration/app-configuration.service';
 import { Lesson } from '../lessons/lesson.entity';
 import { LessonRepositoryMock } from '../lessons/lesson.repository.mock';
 import { LessonsService } from '../lessons/lessons.service';
@@ -13,7 +13,7 @@ import { addVocabulary, initialVocabularyRepository, knownVocabulary, unknownVoc
 
 describe('VocabulariesService', () => {
   let service: VocabularyService;
-  let configuration : ConfigurationService;
+  let configuration : AppConfigurationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,12 +28,12 @@ describe('VocabulariesService', () => {
           provide: getRepositoryToken(Lesson),
           useClass: LessonRepositoryMock,
         },
-        ConfigurationService,
+        AppConfigurationService,
       ],
     }).compile();
 
     service = module.get<VocabularyService>(VocabularyService);
-    configuration = module.get<ConfigurationService>(ConfigurationService);
+    configuration = module.get<AppConfigurationService>(AppConfigurationService);
   });
 
   it('should be defined', () => {
