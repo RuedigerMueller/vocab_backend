@@ -8,13 +8,16 @@ import { User } from './users/user.entity';
 import { UserRepositoryMock } from './users/user.repository.mock';
 import { UsersService } from './users/users.service';
 import { jwtConfiguration } from './auth/authConfiguration';
+import { user_1 } from './users/user.test.data';
 
 describe('App Controller', () => {
   let appController: AppController;
 
+  const http = require('http');
+
+  
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      //imports: [AuthModule, UsersModule],
       controllers: [AppController],
       imports: [
         JwtModule.register({
@@ -40,9 +43,13 @@ describe('App Controller', () => {
     expect(appController).toBeDefined();
   });
 
-  xdescribe('login', () => {
-    it('should login', () => {
-      // ToDo Login Test -> first need to figure out how to do this type of test on auth service
+  describe('login', () => {
+    it('should login a validated user', async () => {
+      const request = new http.IncomingMessage();
+      request.user = user_1;
+
+      const result: User = await appController.login(request);
+      expect(result).toEqual(user_1);
     });
   })
 });

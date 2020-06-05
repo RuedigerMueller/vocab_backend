@@ -6,11 +6,7 @@ import { Lesson } from './lesson.entity';
 import { LessonRepositoryMock } from './lesson.repository.mock';
 import { LessonsController } from './lessons.controller';
 import { LessonsService } from './lessons.service';
-import { addLesson, initialLessonRepository, updateLesson, lessonUser_1, lessonUser_2 } from './lessons.test.data';
-import { initialUserRepository } from '../users/user.test.data';
-import { User } from 'src/users/user.entity';
-
-
+import { addLesson, initialLessonRepository, lessonUser_1, lessonUser_2, updateLesson } from './lessons.test.data';
 
 describe('Lessons Controller', () => {
   let controller: LessonsController;

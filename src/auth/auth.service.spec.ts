@@ -59,11 +59,10 @@ describe('AuthService', () => {
     });
   })
   
-  xdescribe('login', () => {
+  describe('login', () => {
     it('should return the access token', async() => {
-      // ToDo Login Test -> first need to figure out how get the secrete faked
-      /* const result: User = await service.login(user_1);
-      expect(result['access_token']).toBeDefined(); */
+      const result: User = await service.login(user_1);
+      expect(result['access_token']).toBeDefined();
     });
   });
 });
