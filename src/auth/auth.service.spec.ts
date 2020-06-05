@@ -8,6 +8,7 @@ import { user_1 } from '../users/user.test.data';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
+import { jwtConfiguration } from './authConfiguration';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -17,7 +18,7 @@ describe('AuthService', () => {
       imports: [
         PassportModule,
         JwtModule.register({
-          secret: process.env.JWT_SECRET,
+          secret: jwtConfiguration.secret,
           signOptions: { expiresIn: '1800s' },
         }),
       ],

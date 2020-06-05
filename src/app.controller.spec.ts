@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { User } from './users/user.entity';
 import { UserRepositoryMock } from './users/user.repository.mock';
 import { UsersService } from './users/users.service';
+import { jwtConfiguration } from './auth/authConfiguration';
 
 describe('App Controller', () => {
   let appController: AppController;
@@ -17,7 +18,7 @@ describe('App Controller', () => {
       controllers: [AppController],
       imports: [
         JwtModule.register({
-          secret: process.env.JWT_SECRET,
+          secret: jwtConfiguration.secret,
           signOptions: { expiresIn: '1800s' },
         }),
       ],
