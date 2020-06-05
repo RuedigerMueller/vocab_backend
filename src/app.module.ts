@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { VocabulariesModule } from './vocabulary/vocabulary.module';
-import { LessonsModule } from './lessons/lessons.module';
-import { ConfigModule } from '@nestjs/config';
 import { AppConfigurationService } from './app-configuration/app-configuration.service';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { LessonsModule } from './lessons/lessons.module';
+import { UsersModule } from './users/users.module';
+import { VocabulariesModule } from './vocabulary/vocabulary.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     TypeOrmModule.forRoot(), 
     VocabulariesModule, 
     LessonsModule, AuthModule, UsersModule,
