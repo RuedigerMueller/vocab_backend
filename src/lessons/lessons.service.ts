@@ -38,8 +38,8 @@ export class LessonsService {
   }
 
   async update(id: string, updateLessonDto: UpdateLessonDto, user: User): Promise<void> {
-    const lesson: Lesson = await this.findOne(id, user);
-    if (lesson) {
+    if (await this.findOne(id, user)) {
+      const lesson: Lesson = new Lesson();
       lesson.title = updateLessonDto.title;
       lesson.language_a = updateLessonDto.language_a;
       lesson.language_b = updateLessonDto.language_b;
