@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocab-backend
+spec:
+  selector:
+    matchLabels:
+      app: vocab
+      tier: backend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: vocab
+        tier: backend
+    spec:
+      containers:
+        - name: vocab
+          image: "ruedigermueller/vocab_backend"
+          ports:
+            - name: http
+              containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: vocab
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: http
