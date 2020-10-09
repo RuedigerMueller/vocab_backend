@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocab-backend
+spec:
+  selector:
+    app: vocab
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: http
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,16 +33,3 @@ spec:
           ports:
             - name: http
               containerPort: 3000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: vocab-backend
-spec:
-  selector:
-    app: vocab
-    tier: backend
-  ports:
-  - protocol: TCP
-    port: 3000
-    targetPort: http
