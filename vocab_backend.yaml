@@ -1,7 +1,28 @@
+---
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: dbconnection
+    namespace: default
+    labels:
+      app: vocab
+      tier: backend
+  data:
+    db_connection_type: postgres
+    db_host: vocab-db
+    db_port: "5432"
+    db_name: d2qc8kts4lremi
+    db_entities: dist/**/*.entity.js
+    db_migrations: migration/*.js
+    db_synchronize: "true"
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: vocab-backend
+  labels:
+    app: vocab
+    tier: backend
 spec:
   selector:
     app: vocab
@@ -15,6 +36,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vocab-backend
+  labels:
+    app: vocab
+    tier: backend
 spec:
   selector:
     matchLabels:
@@ -33,3 +57,54 @@ spec:
           ports:
             - name: http
               containerPort: 3000
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: vocab-secret
+                  key: jwt_secret
+            - name: TYPEORM_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vocab-secret
+                  key: db_user
+            - name: TYPEORM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vocab-secret
+                  key: db_password
+            - name: TYPEORM_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_connection_type
+            - name: TYPEORM_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_name              
+            - name: TYPEORM_ENTITIES
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_entities    
+            - name: TYPEORM_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_host    
+            - name: TYPEORM_MIGRATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_migrations    
+            - name: TYPEORM_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_port       
+            - name: TYPEORM_SYNCHRONIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: dbconnection
+                  key: db_synchronize   
