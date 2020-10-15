@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbconnection
+  namespace: default
+  labels:
+    tier: backend
+data:
+  db_connection_type: postgres
+  db_host: vocab-db
+#    Postgres DB as as Service on Heroku
+#    db_host: ec2-54-246-87-132.eu-west-1.compute.amazonaws.com
+  db_port: "5432"
+  db_name: d2qc8kts4lremi
+  db_entities: dist/**/*.entity.js
+  db_migrations: migration/*.js
+  db_synchronize: "true"

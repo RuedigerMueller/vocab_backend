@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocab-db
+  labels:
+    app: vocab
+    tier: db
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: vocab
+    tier: db
+  clusterIP: None

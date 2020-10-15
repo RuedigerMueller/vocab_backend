@@ -1,0 +1,11 @@
+namespace: default
+commonLabels:
+  app: vocab
+  tier: backend
+resources:
+  - vocab_backend.configMap.yaml
+  - vocab_backend.service.yaml
+  - vocab_db.PVC.yaml
+  - vocab_db.service.yaml
+  - vocab_db.deployment.yaml
+  - vocab_backend.deployment.yaml
