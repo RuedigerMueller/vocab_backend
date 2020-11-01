@@ -10,7 +10,8 @@ export class UsersController {
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() createUser: CreateUserDto) {
-        this._usersService.create(createUser);
+        console.log('User Controller called')
+        return this._usersService.create(createUser);
     }
 
     @Get(':id')

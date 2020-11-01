@@ -12,7 +12,8 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-     const user: User = new User();
+    console.log('user service called');
+    const user: User = new User();
 
     user.username = createUserDto.username;
     user.password = createUserDto.password;
