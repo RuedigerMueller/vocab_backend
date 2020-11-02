@@ -12,7 +12,6 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log('user service called');
     const user: User = new User();
 
     if (createUserDto.username === '' || createUserDto.password === ''  || createUserDto.firstName === '' || createUserDto.lastName === '' || createUserDto.email === '') return;
