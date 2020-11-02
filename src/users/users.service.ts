@@ -15,6 +15,8 @@ export class UsersService {
     console.log('user service called');
     const user: User = new User();
 
+    if (createUserDto.username === '' || createUserDto.password === ''  || createUserDto.firstName === '' || createUserDto.lastName === '' || createUserDto.email === '') return;
+
     user.username = createUserDto.username;
     user.password = createUserDto.password;
     user.firstName = createUserDto.firstName;
