@@ -21,51 +21,51 @@ jobs:
       - store_test_results:
           path: test-results
 
-docker_build:
-  docker:
-    - image: circleci/node:14.15
-  steps:
-    - checkout
-    - setup_remote_docker:
-        version: 19.03.13
-    - run:
-        name: Build Docker image
-        command: |
-          docker build -t ruedigermueller/vocab_backend .
-          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-          docker push ruedigermueller/vocab_backend
+  docker_build:
+    docker:
+      - image: circleci/node:14.15
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t ruedigermueller/vocab_backend .
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push ruedigermueller/vocab_backend
 
-heroku_deploy:
-  docker:
-    - image: circleci/node:14.15
-  steps:
-    - setup_remote_docker:
-        version: 19.03.13
-    - run:
-        name: Deploy image to Heroku
-        command: |
-          echo $HEROKU_API_KEY | docker login -u=_ --password-stdin registry.heroku.com
-          docker pull ruedigermueller/vocab_backend
-          docker tag ruedigermueller/vocab_backend registry.heroku.com/$HEROKU_DOCKER_APP_NAME/web
-          docker push registry.heroku.com/$HEROKU_DOCKER_APP_NAME/web
+  heroku_deploy:
+    docker:
+      - image: circleci/node:14.15
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - run:
+          name: Deploy image to Heroku
+          command: |
+            echo $HEROKU_API_KEY | docker login -u=_ --password-stdin registry.heroku.com
+            docker pull ruedigermueller/vocab_backend
+            docker tag ruedigermueller/vocab_backend registry.heroku.com/$HEROKU_DOCKER_APP_NAME/web
+            docker push registry.heroku.com/$HEROKU_DOCKER_APP_NAME/web
 
-heroku_release:
-  docker:
-    - image: circleci/node:14.15
-  steps:
-    # - setup_remote_docker:
-    #     version: 19.03.13
-    - run:
-        name: Install Heroku CLI (If not installed)
-        command: |
-          if [[ $(command -v heroku) == "" ]]; then
-            curl https://cli-assets.heroku.com/install.sh | sh
-          else
-            echo "Heroku is already installed. No operation was performed."
-          fi
-    - run:
-        name: Release on Heroku
-        command: heroku container:release web --app $HEROKU_DOCKER_APP_NAME
+  heroku_release:
+    docker:
+      - image: circleci/node:14.15
+    steps:
+      # - setup_remote_docker:
+      #     version: 19.03.13
+      - run:
+          name: Install Heroku CLI (If not installed)
+          command: |
+            if [[ $(command -v heroku) == "" ]]; then
+              curl https://cli-assets.heroku.com/install.sh | sh
+            else
+              echo "Heroku is already installed. No operation was performed."
+            fi
+      - run:
+          name: Release on Heroku
+          command: heroku container:release web --app $HEROKU_DOCKER_APP_NAME
 
 workflows:
   deploy:
