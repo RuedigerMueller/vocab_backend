@@ -19,6 +19,5 @@ RUN npm run build
 #App will be on port 3000
 EXPOSE 3000
 
-
 # Run the app 
 CMD npm run-script start
