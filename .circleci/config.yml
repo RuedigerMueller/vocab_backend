@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build_and_test:
+  install_and_test:
     docker:
       - image: circleci/node:14.15
     steps:
@@ -53,7 +53,6 @@ jobs:
     docker:
       - image: circleci/node:14.15
     steps:
-
       - run:
           name: Install Heroku CLI (If not installed)
           command: |
@@ -69,10 +68,10 @@ jobs:
 workflows:
   deploy:
     jobs:
-      - build_and_test
+      - install_and_test
       - docker_build:
           requires:
-            - build_and_test
+            - install_and_test
           context: vocab
       - heroku_deploy:
           requires:
