@@ -1,6 +1,6 @@
 # Vocab - Backend
 
-This is the bakend component of a basic vocabulary trainer. The focus of this program was not on providing a feature reach vocabulary trainer but to teach myself the development of a cloud native component.
+This is the backend component of a basic vocabulary trainer. The focus of this program was not on providing a feature reach vocabulary trainer but to teach myself the development of a cloud native component.
 The backend component is a [Node.js](https://nodejs.org/en/) component which leverages the [NestJS](https://nestjs.com/) framework. For connecting to the database the backend is making use of [TypeORM](https://typeorm.io/#/)
 The backend is called by frontend component; the coding for the frontend component is available in the repository [RuedigerMueller/vocab_frontend](https://github.com/RuedigerMueller/vocab_frontend).
 
