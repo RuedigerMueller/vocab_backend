@@ -22,7 +22,7 @@ Run `npm run test:e2e` to execute the end-to-end tests via [Jest](https://jestjs
 
 ## Further help
 
-You can also use the ready to run Docker Image[ruedigermueller/vocab_backend](https://hub.docker.com/repository/docker/ruedigermueller/vocab_backend) to run the application. In order to setup to a database you will have to provide the following environment variables:
+You can also use the ready to run Docker Image [ruedigermueller/vocab_backend](https://hub.docker.com/repository/docker/ruedigermueller/vocab_backend) to run the application. In order to setup to a database you will have to provide the following environment variables:
 * `JWT_SECRET`
 * `TYPEORM_CONNECTION`
 * `TYPEORM_DATABASE`
