@@ -1,4 +1,4 @@
-namespace: default
+namespace: ruedigermueller
 commonLabels:
   app: vocab
   tier: backend

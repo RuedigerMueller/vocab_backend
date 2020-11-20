@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dbconnection
-  namespace: default
+  namespace: ruedigermueller
   labels:
     tier: backend
 data:
