@@ -35,7 +35,7 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push ruedigermueller/vocab_backend:undertest
 
-  heroku_deploy_test:
+  heroku_deploy_to_test:
     docker:
       - image: circleci/node:14.15
     steps:
@@ -49,7 +49,7 @@ jobs:
             docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/$HEROKU_TEST/web
             docker push registry.heroku.com/$HEROKU_TEST/web
 
-  heroku_release_test:
+  heroku_release_for_test:
     docker:
       - image: circleci/node:14.15
     steps:
@@ -65,7 +65,7 @@ jobs:
           name: Release on Heroku test environment
           command: heroku container:release web --app $HEROKU_TEST
 
-  heroku_deploy_prod:
+  heroku_deploy_to_prod:
     docker:
       - image: circleci/node:14.15
     steps:
@@ -82,7 +82,7 @@ jobs:
             docker tag ruedigermueller/vocab_backend registry.heroku.com/$HEROKU_PROD/web
             docker push registry.heroku.com/$HEROKU_PROD/web
 
-  heroku_release_prod:
+  heroku_release_for_prod:
     docker:
       - image: circleci/node:14.15
     steps:
