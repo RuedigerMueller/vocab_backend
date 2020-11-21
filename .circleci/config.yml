@@ -116,7 +116,7 @@ workflows:
             - heroku_release_test
       - heroku_deploy_prod:
           requires:
-            - test_staging
+            - test
           context: vocab
       - heroku_release_prod:
           requires:
