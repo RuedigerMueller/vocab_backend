@@ -35,4 +35,9 @@ You can also use the ready to run Docker Image [ruedigermueller/vocab_backend](h
 * `TYPEORM_URL`
 * `TYPEORM_USERNAME`
 
-The backend is running at https://vocabdockerbackend.herokuapp.com/
+The backend is running on [Heroku](https://www.heroku.com/home):
+* [Test](https://vocabbetest.herokuapp.com/)
+* [Prod](https://vocabbeprod.herokuapp.com/)
+
+A version of the app (frontend & backend) leveraging [Kubernetes](https://kubernetes.io) is running at [Okteto](https://okteto.com/):
+* [Vocab TS](https://vocab-frontend-ruedigermueller.cloud.okteto.net/)
