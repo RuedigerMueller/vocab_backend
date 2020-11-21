@@ -110,13 +110,13 @@ workflows:
       - heroku_release_test:
           requires:
             - heroku_deploy_test
-      - test:
+      - approve_for_prod:
           type: approval
           requires:
             - heroku_release_test
       - heroku_deploy_prod:
           requires:
-            - test
+            - approve_for_prod
           context: vocab
       - heroku_release_prod:
           requires:
