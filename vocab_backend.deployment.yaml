@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: vocab
-          image: "ruedigermueller/vocab_backend"
+          image: "ruedigermueller/vocab_backend:released"
           ports:
             - name: http
               containerPort: 3000
