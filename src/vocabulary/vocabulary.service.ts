@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LessonsService } from '../lessons/lessons.service';
@@ -10,6 +10,8 @@ import { User } from '../users/user.entity';
 
 @Injectable()
 export class VocabularyService {
+  private readonly _logger = new Logger(VocabularyService.name);
+  
   constructor(
     @InjectRepository(Vocabulary)
     private _vocabulariesRepository: Repository<Vocabulary>,
@@ -18,19 +20,23 @@ export class VocabularyService {
   ) { }
 
   async findAll(user: User): Promise<Vocabulary[]> {
+    this._logger.log(`findAll: user = ${ JSON.stringify(user) }`);
     return this._vocabulariesRepository.find({ where: { user: user } });
   }
 
   findOne(id: string, user: User): Promise<Vocabulary> {
+    this._logger.log(`findOne: id = ${id}, user = ${ JSON.stringify(user) }`);
     return this._vocabulariesRepository.findOne({ where: { id: id, user: user } });
   }
 
   async remove(id: string, user: User): Promise<void> {
+    this._logger.log(`remove: id = ${id}, user = ${ JSON.stringify(user) }`);
     const vocabulary: Vocabulary = await this.findOne(id, user);
     if (vocabulary) await this._vocabulariesRepository.delete(id);
   }
 
   async create(createVocabularyDto: CreateVocabularyDto, user: User): Promise<Vocabulary> {
+    this._logger.log(`create: createVocabularyDto = ${ JSON.stringify(createVocabularyDto)}, user = ${ JSON.stringify(user) }`);
     const vocabulary: Vocabulary = new Vocabulary();
 
     vocabulary.user = user;
@@ -47,11 +53,8 @@ export class VocabularyService {
     return await this._vocabulariesRepository.save(vocabulary);
   }
 
-  async update(
-    id: string,
-    updateVocabularyDto: UpdateVocabularyDto,
-    user: User
-  ): Promise<void> {
+  async update(id: string, updateVocabularyDto: UpdateVocabularyDto, user: User): Promise<void> {
+    this._logger.log(`update: updateVocabularyDto = ${ JSON.stringify(updateVocabularyDto)}, user = ${ JSON.stringify(user) }`);
     const vocabulary: Vocabulary = await this.findOne(id, user);
 
     if (vocabulary) {
@@ -68,6 +71,7 @@ export class VocabularyService {
   }
 
   async vocabKnown(id: string, user: User): Promise<void> {
+    this._logger.log(`vocabKnown: id = ${id}, user = ${ JSON.stringify(user) }`);
     const vocabulary = await this.findOne(id, user);
 
     if (vocabulary) {
@@ -88,6 +92,7 @@ export class VocabularyService {
   }
 
   async vocabUnknown(id: string, user: User): Promise<void> {
+    this._logger.log(`vocabUnknown: id = ${id}, user = ${ JSON.stringify(user) }`);
     const vocabulary = await this.findOne(id, user);
 
     if (vocabulary) {
@@ -102,11 +107,12 @@ export class VocabularyService {
   }
 
   async getLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {
+    this._logger.log(`getLessonVocabulary: id = ${id}, user = ${ JSON.stringify(user) }`);
     return this._vocabulariesRepository.find({ where: { lesson: id, user: user } });
   }
 
   async getDueLessonVocabulary(id: string, user: User): Promise<Vocabulary[]> {
-    // return this._vocabulariesRepository.find({ where: { lesson: id, dueDate: LessThanOrEqual(Date()) } });
+    this._logger.log(`getDueLessonVocabulary: id = ${id}, user = ${ JSON.stringify(user) }`);
     const currentDate = new Date();
     const lessonVocabulary: ReadonlyArray<Vocabulary> = await this.getLessonVocabulary(id, user);
     return lessonVocabulary.filter(vocab => {
