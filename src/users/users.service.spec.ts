@@ -3,9 +3,8 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserRepositoryMock } from './user.repository.mock';
-import { addUser, user_1 } from './user.test.data';
+import { addUser_1, user_1 } from './user.test.data';
 import { CreateUserDto } from './dto/create-user.dto';
-import { async } from 'rxjs/internal/scheduler/async';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -30,18 +29,18 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should create a user with ID', async () => {
-      const expected_result: User =addUser;
+      const expected_result: User =addUser_1;
 
       const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser.username;
-      createUserDto.email = addUser.email;
-      createUserDto.firstName = addUser.firstName;
-      createUserDto.lastName =  addUser.lastName;
-      createUserDto.password = addUser.password;
+      createUserDto.username = addUser_1.username;
+      createUserDto.email = addUser_1.email;
+      createUserDto.firstName = addUser_1.firstName;
+      createUserDto.lastName =  addUser_1.lastName;
+      createUserDto.password = addUser_1.password;
 
       await service.create(createUserDto);
 
-      expect(await service.findOne(addUser.email)).toEqual(expected_result);
+      expect(await service.findOne(addUser_1.email)).toEqual(expected_result);
     });
   });
 

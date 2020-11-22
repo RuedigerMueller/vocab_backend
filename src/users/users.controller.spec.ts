@@ -4,8 +4,9 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserRepositoryMock } from './user.repository.mock';
-import { addUser, user_1 } from './user.test.data';
+import { addUser_1, addUser_2, user_1 } from './user.test.data';
 import { CreateUserDto } from './dto/create-user.dto';
+import { throws } from 'assert';
 
 describe('Users Controller', () => {
   let controller: UsersController;
@@ -31,46 +32,46 @@ describe('Users Controller', () => {
 
   describe('create', () => {
     it('should create a user', async () => {
-      const expected_result: User =addUser;
+      const expected_result: User = addUser_1;
 
       const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser.username;
-      createUserDto.email = addUser.email;
-      createUserDto.firstName = addUser.firstName;
-      createUserDto.lastName =  addUser.lastName;
-      createUserDto.password = addUser.password;
+      createUserDto.username = addUser_1.username;
+      createUserDto.email = addUser_1.email;
+      createUserDto.firstName = addUser_1.firstName;
+      createUserDto.lastName = addUser_1.lastName;
+      createUserDto.password = addUser_1.password;
 
       await controller.create(createUserDto);
 
-      expect(await controller.findOne(addUser.id.toString())).toEqual(expected_result);
+      expect(await controller.findOne(addUser_1.id.toString())).toEqual(expected_result);
     });
 
     it('should not create a user when data is missing', async () => {
       const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser.username;
-      createUserDto.email = addUser.email;
-      createUserDto.firstName = addUser.firstName;
-      createUserDto.lastName =  addUser.lastName;
-      createUserDto.password = addUser.password;
+      createUserDto.username = addUser_2.username;
+      createUserDto.email = addUser_2.email;
+      createUserDto.firstName = addUser_2.firstName;
+      createUserDto.lastName = addUser_2.lastName;
+      createUserDto.password = addUser_2.password;
 
       createUserDto.username = '';
-      expect(await controller.create(createUserDto)).toBeUndefined();
-
-     createUserDto.username = addUser.username;
-     createUserDto.email = '';
-     expect(await controller.create(createUserDto)).toBeUndefined();
-
-     createUserDto.email = addUser.email;
-     createUserDto.firstName = '';
-     expect(await controller.create(createUserDto)).toBeUndefined();
-
-     createUserDto.firstName = addUser.firstName;
-     createUserDto.lastName =  '';
-     expect(await controller.create(createUserDto)).toBeUndefined();
+      await expect(controller.create(createUserDto)).rejects.toThrow()
      
-     createUserDto.lastName = addUser.lastName
-     createUserDto.password = '';
-     expect(await controller.create(createUserDto)).toBeUndefined();
+      createUserDto.username = addUser_2.username;
+      createUserDto.email = '';
+      await expect(controller.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.email = addUser_2.email;
+      createUserDto.firstName = '';
+      await expect(controller.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.firstName = addUser_2.firstName;
+      createUserDto.lastName = '';
+      await expect(controller.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.lastName = addUser_2.lastName
+      createUserDto.password = '';
+      await expect(controller.create(createUserDto)).rejects.toThrow()
     });
   });
 

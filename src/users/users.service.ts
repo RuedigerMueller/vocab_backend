@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -13,69 +13,45 @@ export class UsersService {
     private _userRepository: Repository<User>,
   ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    this._logger.log(`create: createUserDto = ${ JSON.stringify(createUserDto) }`);
-    const user: User = new User();
+  async create(createUserDto: CreateUserDto): Promise<User | undefined> {
+    this._logger.log(`create: createUserDto = ${JSON.stringify(createUserDto)}`);
 
-    if (createUserDto.username === '' || createUserDto.password === ''  || createUserDto.firstName === '' || createUserDto.lastName === '' || createUserDto.email === '') return;
+    // check if all required data was provided
+    if (createUserDto.username === '' || createUserDto.password === '' || createUserDto.firstName === '' || createUserDto.lastName === '' || createUserDto.email === '') {
+      this._logger.warn(`create: User data incomplete`);
+      throw new Error(`Not all required attributes provided`);
+    }
+
+    // check if user with same e-Mail address does not already exist
+    if ((await this.findOne(createUserDto.email) !== undefined)) {
+      this._logger.warn(`create: User with e-Mail ${createUserDto.email} address already exists!`);
+      throw new Error(`User with email already exists`);
+    }
+    
+    const user: User = new User();
 
     user.username = createUserDto.username;
     user.password = createUserDto.password;
     user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName; 
-    user.email =createUserDto.email;
+    user.lastName = createUserDto.lastName;
+    user.email = createUserDto.email;
 
     return await this._userRepository.save(user);
   }
 
   async findOne(email: string): Promise<User | undefined> {
-    this._logger.log(`findOne: email = ${ email }`);
+    this._logger.log(`findOne: email = ${email}`);
     return this._userRepository.findOne({ where: { email: email } });
   }
 
   async findbyID(id: number): Promise<User | undefined> {
-    this._logger.log(`findbyID: id = ${ id }`);
+    this._logger.log(`findbyID: id = ${id}`);
     return this._userRepository.findOne({ where: { id: id } });
   }
-}
 
-/*
-@Injectable()
-export class UsersService {
-    // Todo: Replace with DB and hashed PW
-    private readonly users: User[];
-  
-    constructor() {
-      this.users = [
-        {
-          id: 1,
-          username: 'john',
-          password: 'changeme',
-          firstName: 'John',
-          lastName: 'Miller',
-          email: 'john@example.com',
-        },
-        {
-          id: 2,
-          username: 'chris',
-          password: 'secret',
-          firstName: 'Chris',
-          lastName: 'Myres',
-          email: 'chris@example.com',
-        },
-        {
-          id: 3,
-          username: 'maria',
-          password: 'guess',
-          firstName: 'Maria',
-          lastName: 'Muller',
-          email: 'maria@example.com',
-        },
-      ];
-    }
-  
-    async findOne(email: string): Promise<User | undefined> {
-      return this.users.find(user => user.email === email);
-    }
+  async remove(email: string): Promise<void> {
+    this._logger.log(`remove: email = ${email}`);
+    const user: User = await this.findOne(email);
+    await this._userRepository.remove(user);
   }
-*/
+}

@@ -34,11 +34,20 @@ function createUser(
   export const user_1: User = initialUserRepository.find(user => user.id === 1);
   export const user_2: User = initialUserRepository.find(user => user.id === 2);
 
-  export const addUser: User = createUser(
+  export const addUser_1: User = createUser(
     4,
     'paula',
     'special',
     'Paula',
     'Paulsen',
     'paula@example.com'
+  );
+
+  export const addUser_2: User = createUser(
+    5,
+    'paul',
+    'special',
+    'Paul',
+    'Paulsen',
+    'paul@example.com'
   );
