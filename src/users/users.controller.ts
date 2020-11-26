@@ -1,7 +1,8 @@
-import { Controller, UsePipes, Post, ValidationPipe, Body, Get, Param, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, UsePipes, Post, ValidationPipe, Body, Get, Param, HttpStatus, HttpException, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +20,13 @@ export class UsersController {
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard)
     async findOne(@Param('id') id: string): Promise<User | undefined> {
         return this._usersService.findbyID(parseInt(id));
+    }
+
+    @Get()
+    async findByEmail(@Query('email') email: string): Promise<User | undefined> {
+        return this._usersService.findOne(email);
     }
 }

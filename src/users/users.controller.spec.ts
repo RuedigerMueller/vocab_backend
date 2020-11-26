@@ -6,7 +6,6 @@ import { User } from './user.entity';
 import { UserRepositoryMock } from './user.repository.mock';
 import { addUser_1, addUser_2, user_1 } from './user.test.data';
 import { CreateUserDto } from './dto/create-user.dto';
-import { throws } from 'assert';
 
 describe('Users Controller', () => {
   let controller: UsersController;
@@ -76,12 +75,22 @@ describe('Users Controller', () => {
   });
 
   describe('findOne', () => {
-    it('should find a user with an existing e-mail', async () => {
+    it('should find a user with an existing id', async () => {
       expect(await controller.findOne(user_1.id.toString())).toEqual(user_1);
     });
 
-    it('should not find a user with a not existing e-mail', async () => {
+    it('should not find a user with a not existing id', async () => {
       expect(await controller.findOne('4711')).toBeUndefined();
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should find a user with an existing e-Mail', async () => {
+      expect(await controller.findByEmail(user_1.email)).toEqual(user_1);
+    });
+
+    it('should not find a user with a not existing e-Mail', async () => {
+       expect(await controller.findByEmail('email@DoesNotExist.com')).toBeUndefined();
     });
   });
 });
