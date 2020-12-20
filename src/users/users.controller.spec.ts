@@ -72,6 +72,16 @@ describe('Users Controller', () => {
       createUserDto.password = '';
       await expect(controller.create(createUserDto)).rejects.toThrow()
     });
+
+    it('should not create a user when e-mail is already taken', async () => {
+      const createUserDto: CreateUserDto = new CreateUserDto();
+      createUserDto.username = addUser_1.username;
+      createUserDto.email = user_1.email;
+      createUserDto.firstName = addUser_1.firstName;
+      createUserDto.lastName = addUser_1.lastName;
+      createUserDto.password = addUser_1.password;
+      await expect(controller.create(createUserDto)).rejects.toThrow()
+    });
   });
 
   describe('findOne', () => {

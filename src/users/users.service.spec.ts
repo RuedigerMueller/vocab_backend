@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserRepositoryMock } from './user.repository.mock';
-import { addUser_1, user_1 } from './user.test.data';
+import { addUser_1, addUser_2, user_1 } from './user.test.data';
 import { CreateUserDto } from './dto/create-user.dto';
 
 describe('UsersService', () => {
@@ -41,6 +41,44 @@ describe('UsersService', () => {
       await service.create(createUserDto);
 
       expect(await service.findOne(addUser_1.email)).toEqual(expected_result);
+    });
+
+    it('should not create a user when data is missing', async () => {
+      const createUserDto: CreateUserDto = new CreateUserDto();
+      createUserDto.username = addUser_2.username;
+      createUserDto.email = addUser_2.email;
+      createUserDto.firstName = addUser_2.firstName;
+      createUserDto.lastName = addUser_2.lastName;
+      createUserDto.password = addUser_2.password;
+
+      createUserDto.username = '';
+      await expect(service.create(createUserDto)).rejects.toThrow()
+     
+      createUserDto.username = addUser_2.username;
+      createUserDto.email = '';
+      await expect(service.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.email = addUser_2.email;
+      createUserDto.firstName = '';
+      await expect(service.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.firstName = addUser_2.firstName;
+      createUserDto.lastName = '';
+      await expect(service.create(createUserDto)).rejects.toThrow()
+
+      createUserDto.lastName = addUser_2.lastName
+      createUserDto.password = '';
+      await expect(service.create(createUserDto)).rejects.toThrow()
+    });
+
+    it('should not create a user when e-mail is already taken', async () => {
+      const createUserDto: CreateUserDto = new CreateUserDto();
+      createUserDto.username = addUser_1.username;
+      createUserDto.email = user_1.email;
+      createUserDto.firstName = addUser_1.firstName;
+      createUserDto.lastName = addUser_1.lastName;
+      createUserDto.password = addUser_1.password;
+      await expect(service.create(createUserDto)).rejects.toThrow()
     });
   });
 
