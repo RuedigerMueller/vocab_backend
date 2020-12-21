@@ -48,10 +48,4 @@ export class UsersService {
     this._logger.log(`findbyID: id = ${id}`);
     return this._userRepository.findOne({ where: { id: id } });
   }
-
-  async remove(email: string): Promise<void> {
-    this._logger.log(`remove: email = ${email}`);
-    const user: User = await this.findOne(email);
-    await this._userRepository.remove(user);
-  }
 }

@@ -16,7 +16,9 @@ import { jwtConfiguration } from './authConfiguration';
     }),
     UsersModule, 
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, 
+              LocalStrategy,
+              JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
