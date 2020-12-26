@@ -5,13 +5,17 @@ import { AppConfigurationService } from './app-configuration/app-configuration.s
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { TypeOrmConfigService } from './db-configuration';
 import { LessonsModule } from './lessons/lessons.module';
 import { UsersModule } from './users/users.module';
 import { VocabulariesModule } from './vocabulary/vocabulary.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(), 
+    //TypeOrmModule.forRoot(), 
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,      
+    }),
     VocabulariesModule, 
     LessonsModule, AuthModule, UsersModule,
   ],
