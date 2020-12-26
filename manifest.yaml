@@ -3,3 +3,5 @@ applications:
 - name: vocab_backend
   random-route: true
   memory: 128MB
+services:
+- vocab_db
