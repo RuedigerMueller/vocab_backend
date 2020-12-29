@@ -20,6 +20,10 @@ jobs:
           command: npm run test
       - store_test_results:
           path: test-results
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   docker_build:
     docker:
@@ -97,6 +101,28 @@ jobs:
       - run:
           name: Release on Heroku prod environment
           command: heroku container:release web --app $HEROKU_PROD
+  
+  scp_deploy:
+    docker:
+      - image: circleci/node:14.15
+    steps:
+      - run:
+          name: Setup CF CLI
+          command: |
+            sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v6'
+            sudo dpkg -i cf-cli_amd64.deb
+            cf -v
+            cf api https://api.cf.eu10.hana.ondemand.com
+            cf auth "$SCP_USER" "$SCP_PASSWORD"
+            cf target -o "$SCP_ORG" -s "$SCP_SPACE"
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build frontend
+          command: npm run-script build
+      - run:
+          name: CF Deploy
+          command: cf push
 
 workflows:
   deploy:
@@ -124,3 +150,7 @@ workflows:
       - heroku_release_for_prod:
           requires:
             - heroku_deploy_to_prod
+      - scp_deploy:
+          requires:
+            - approve_for_prod
+          context: vocab
