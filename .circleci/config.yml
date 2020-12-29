@@ -121,6 +121,7 @@ jobs:
       # - run:
       #     name: Build frontend
       #     command: npm run-script build
+      - run: find .
       - run:
           name: CF Deploy
           command: cf push
