@@ -4,5 +4,5 @@ applications:
   memory: 128MB
   buildbacks:
   - nodejs_buildpack
-services:
-- vocab_db
+  services:
+  - vocab_db
