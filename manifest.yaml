@@ -2,7 +2,5 @@
 applications:
 - name: vocab_backend
   memory: 128MB
-  buildbacks:
-  - nodejs_buildpack
   services:
   - vocab_db

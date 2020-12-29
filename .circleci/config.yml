@@ -118,10 +118,9 @@ jobs:
             cf target -o "$SCP_ORG" -s "$SCP_SPACE"
       # - attach_workspace:
       #     at: .
-      # - run:
-      #     name: Build frontend
-      #     command: npm run-script build
-      - run: find .
+      - run:
+          name: Build frontend
+          command: npm install
       - run:
           name: CF Deploy
           command: cf push
