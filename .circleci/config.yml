@@ -119,9 +119,12 @@ jobs:
             cf api https://api.cf.eu10.hana.ondemand.com
             cf auth "$SCP_USER" "$SCP_PASSWORD"
             cf target -o "$SCP_ORG" -s "$SCP_SPACE"
-      # - run:
-      #     name: Build frontend
-      #     command: npm install
+      - run:
+           name: Install dependencies
+           command: npm install
+      - run:
+           name: build
+           command: npm run build
       - run:
           name: CF Deploy
           command: cf push
