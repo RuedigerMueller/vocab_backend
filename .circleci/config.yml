@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   install_and_test:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - checkout
       - restore_cache:
@@ -30,7 +30,7 @@ jobs:
 
   docker_build:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - checkout
       - setup_remote_docker:
@@ -44,7 +44,7 @@ jobs:
 
   heroku_deploy_to_test:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - setup_remote_docker:
           version: 19.03.13
@@ -58,7 +58,7 @@ jobs:
 
   heroku_release_for_test:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - run:
           name: Install Heroku CLI (If not installed)
@@ -74,7 +74,7 @@ jobs:
 
   heroku_deploy_to_prod:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - setup_remote_docker:
           version: 19.03.13
@@ -91,7 +91,7 @@ jobs:
 
   heroku_release_for_prod:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - run:
           name: Install Heroku CLI (If not installed)
@@ -107,7 +107,7 @@ jobs:
   
   scp_deploy:
     docker:
-      - image: circleci/node:14.15
+      - image: circleci/node:14.15.3
     steps:
       - checkout
       - run:
