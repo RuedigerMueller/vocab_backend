@@ -1,1 +1,5 @@
 cf-cli_*
+Dockerfile
+test.db
+.vscode
+coverage
