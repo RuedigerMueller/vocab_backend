@@ -1,5 +1,6 @@
 cf-cli_*
 Dockerfile
+Dockerfile_standalone
 test.db
 .vscode
 coverage

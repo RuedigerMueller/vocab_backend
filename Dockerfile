@@ -1,20 +1,11 @@
 FROM node:14.15.3-alpine
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /vocab_backend
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-# If you are building your code for production
-# RUN npm ci --only=production
-RUN npm install
-
-# Bundle app source
+# Assuming the Docker image is build as part of a pipeline
+# A previous job already installed the dependencies & executed the build
 COPY . .
-RUN npm run build
 
 #App will be on port 3000
 EXPOSE 3000

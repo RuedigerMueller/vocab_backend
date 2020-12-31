@@ -32,7 +32,9 @@ jobs:
     docker:
       - image: circleci/node:14.15.3
     steps:
-      - checkout
+      # - checkout
+      - attach_workspace:
+          at: .
       - setup_remote_docker:
           version: 19.03.13
       - run:
@@ -109,7 +111,6 @@ jobs:
     docker:
       - image: circleci/node:14.15.3
     steps:
-      - checkout
       - attach_workspace:
           at: .
       - run:
