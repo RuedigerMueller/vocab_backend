@@ -32,20 +32,13 @@ jobs:
     docker:
       - image: circleci/node:14.15.3
     steps:
-      # - checkout
-      - attach_workspace:
-          at: .
+      - checkout
       - setup_remote_docker:
           version: 19.03.13
       - run:
           name: Build Docker image
           command: |
-            docker create -v /app --name vocab_backend_src node:14.15.3-alpine /bin/true
-            echo 'step 2'
-            docker cp . vocab_backend_src:/app
-            echo 'step 3'
             docker build -t ruedigermueller/vocab_backend:undertest .
-            echo 'step 4'
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push ruedigermueller/vocab_backend:undertest
 
