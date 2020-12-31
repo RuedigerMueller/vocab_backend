@@ -40,7 +40,8 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker cp . .
+            docker create -v /app --name vocab_backend alpine:3.4 /bin/true
+            docker cp . vocab_backend:/app
             docker build -t ruedigermueller/vocab_backend:undertest .
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push ruedigermueller/vocab_backend:undertest
