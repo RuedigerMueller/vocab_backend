@@ -2,6 +2,7 @@
 applications:
 - name: vocab_backend
   memory: 128MB
+  instances: 2
   docker:
     image: ruedigermueller/vocab_backend:released
   services:
