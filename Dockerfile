@@ -1,7 +1,7 @@
 FROM node:14.15.3-alpine
 
 # Create app directory
-WORKDIR /vocab_backend
+WORKDIR /usr/src/app
 
 # Assuming the Docker image is build as part of a pipeline
 # A previous job already installed the dependencies & executed the build
