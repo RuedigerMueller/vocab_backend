@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 # Assuming the Docker image is build as part of a pipeline
 # A previous job already installed the dependencies & executed the build
-COPY . .
+COPY vocab_backend:/app .
 
 #App will be on port 3000
 EXPOSE 3000
