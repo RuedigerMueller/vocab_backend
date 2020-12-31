@@ -109,6 +109,7 @@ jobs:
     docker:
       - image: circleci/node:14.15.3
     steps:
+      - checkout
       # - attach_workspace:
       #     at: .
       - run:
@@ -128,7 +129,7 @@ jobs:
       #      command: npm run build
       - run:
           name: CF Deploy
-          command: cf push -f https://github.com/RuedigerMueller/vocab_backend/blob/master/manifest.yaml
+          command: cf push
           
 workflows:
   deploy:
