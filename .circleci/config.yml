@@ -109,8 +109,8 @@ jobs:
     docker:
       - image: circleci/node:14.15.3
     steps:
-      - attach_workspace:
-          at: .
+      # - attach_workspace:
+      #     at: .
       - run:
           name: Setup CF CLI
           command: |
@@ -129,7 +129,7 @@ jobs:
       - run:
           name: CF Deploy
           command: cf push
-
+          
 workflows:
   deploy:
     jobs:
