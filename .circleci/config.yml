@@ -128,7 +128,7 @@ jobs:
       #      command: npm run build
       - run:
           name: CF Deploy
-          command: cf push
+          command: cf push -f https://github.com/RuedigerMueller/vocab_backend/blob/master/manifest.yaml
           
 workflows:
   deploy:
