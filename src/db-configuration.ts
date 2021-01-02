@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 import { getConnectionOptions } from "typeorm";
 import * as PostgressConnectionStringParser from "pg-connection-string";
@@ -6,9 +6,11 @@ import * as PostgressConnectionStringParser from "pg-connection-string";
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
+      const logger:Logger = new Logger('DB Config');
+
       // Running on Cloud Foundry?
       if (process.env.VCAP_SERVICES !== undefined) {
-         console.log('Running on Cloud Foundry');
+         logger.log('Running on Cloud Foundry');
          const vcap_services = JSON.parse(process.env.VCAP_SERVICES);
          return {
             type: 'postgres',
@@ -31,7 +33,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
       // Running on Heroku?
       if (process.env.DATABASE_URL !== undefined) {
-         console.log('Running on Heroku');
+         logger.log('Running on Heroku');
          const databaseUrl: string = process.env.DATABASE_URL;
          const connectionOptions = PostgressConnectionStringParser.parse(databaseUrl);
          return {
@@ -52,7 +54,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       // if not running in Cloud Foundry or on Heroku take the connectionOpions as is which means
       // 1) from ENV variables => used when running in the Cloud
       // 2) from .env/ormconfig.json when running locally
-      console.log('Neither running on Cloud Foundry or Heroku');
+      logger.log('Neither running on Cloud Foundry or Heroku');
       return await getConnectionOptions();
    }
 }
