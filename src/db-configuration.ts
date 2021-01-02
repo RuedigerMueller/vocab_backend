@@ -1,18 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 import { getConnectionOptions } from "typeorm";
+import * as PostgressConnectionStringParser from "pg-connection-string";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-     // if not running in Cloud Foundry take the connectionOpions as is which means
-     // 1) from ENV variables => used when running in the Cloud
-     // 2) from .env/ormconfig.json when running locally
-     if(process.env.VCAP_SERVICES === undefined) {
-        return await getConnectionOptions();
-     } else {
-        const vcap_services = JSON.parse(process.env.VCAP_SERVICES);     
-        return {
+   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
+      // Running on Cloud Foundry?
+      if (process.env.VCAP_SERVICES !== undefined) {
+         console.log('Running on Cloud Foundry');
+         const vcap_services = JSON.parse(process.env.VCAP_SERVICES);
+         return {
             type: 'postgres',
             host: vcap_services['postgresql-db'][0].credentials.hostname,
             port: vcap_services['postgresql-db'][0].credentials.port,
@@ -25,10 +23,36 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             migrations: ['migration/*.js'],
             extra: '{ "ssl": true, "rejectUnauthorized": true }',
             ssl: {
-                ca: vcap_services['postgresql-db'][0].credentials.sslrootcert,
-                cert:vcap_services['postgresql-db'][0].credentials.sslcert,
+               ca: vcap_services['postgresql-db'][0].credentials.sslrootcert,
+               cert: vcap_services['postgresql-db'][0].credentials.sslcert,
             }
-          };
-     }   
-  }
+         };
+      }
+
+      // Running on Heroku?
+      if (process.env.DATABASE_URL !== undefined) {
+         console.log('Running on Heroku');
+         const databaseUrl: string = process.env.DATABASE_URL;
+         const connectionOptions = PostgressConnectionStringParser.parse(databaseUrl);
+         return {
+            type: 'postgres',
+            host: connectionOptions.host,
+            port: parseInt(connectionOptions.port),
+            username: connectionOptions.user,
+            password: connectionOptions.password,
+            database: connectionOptions.database,
+            url: databaseUrl,
+            entities: ['dist/**/*.entity.js'],
+            synchronize: true,
+            migrations: ['migration/*.js'],
+            extra: '{ "ssl": true, "rejectUnauthorized": true }',
+         };
+      }
+
+      // if not running in Cloud Foundry or on Heroku take the connectionOpions as is which means
+      // 1) from ENV variables => used when running in the Cloud
+      // 2) from .env/ormconfig.json when running locally
+      console.log('Neither running on Cloud Foundry or Heroku');
+      return await getConnectionOptions();
+   }
 }
