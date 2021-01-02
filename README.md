@@ -22,18 +22,21 @@ Run `npm run test:e2e` to execute the end-to-end tests via [Jest](https://jestjs
 
 ## Further help
 
-You can also use the ready to run Docker Image [ruedigermueller/vocab_backend](https://hub.docker.com/repository/docker/ruedigermueller/vocab_backend) to run the application. In order to setup to a database you will have to provide the following environment variables:
-* `JWT_SECRET`
+You can also use the ready to run Docker Image [ruedigermueller/vocab_backend](https://hub.docker.com/repository/docker/ruedigermueller/vocab_backend) to run the application. 
+
+You will have to set the `JWT_SECRET` environment variable to enable authenticted communication with the backend. For more information see [JSON Web Token](https://en.wikipedia.org/wiki/JSON_Web_Token).
+
+In order to setup to a database connection when running outside of Cloud Foundry or Heroku you will have to provide the following environment variables (see: [TypeORM Connection Options](https://typeorm.io/#/connection-options)):
 * `TYPEORM_CONNECTION`
 * `TYPEORM_DATABASE`
-* `TYPEORM_ENTITIES = dist/**/*.entity.js`
 * `TYPEORM_HOST`
-* `TYPEORM_MIGRATIONS = migration/*.js`
 * `TYPEORM_PASSWORD`
 * `TYPEORM_PORT `
 * `TYPEORM_SYNCHRONIZE`
 * `TYPEORM_URL`
 * `TYPEORM_USERNAME`
+* `TYPEORM_ENTITIES = dist/**/*.entity.js`
+* `TYPEORM_MIGRATIONS = migration/*.js`
 
 The backend is running on [Heroku](https://www.heroku.com/home):
 * [Test](https://vocabbetest.herokuapp.com/)
