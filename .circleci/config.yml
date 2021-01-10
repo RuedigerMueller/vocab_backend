@@ -101,7 +101,7 @@ jobs:
           name: Release on Heroku prod environment
           command: heroku container:release web --app $HEROKU_PROD
   
-scp_dark_deploy:
+  scp_dark_deploy:
     docker:
       - image: circleci/node:14.15.3
     steps:
@@ -126,7 +126,7 @@ scp_dark_deploy:
             cf set-env vocab_backend_green JWT_SECRET $JWT_SECRET
             cf start vocab_backend_green
   
-scp_deploy_switch_and_cleanup:
+  scp_deploy_switch_and_cleanup:
     docker:
       - image: circleci/node:14.15.3
     steps:
