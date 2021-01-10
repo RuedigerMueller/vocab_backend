@@ -101,7 +101,7 @@ jobs:
           name: Release on Heroku prod environment
           command: heroku container:release web --app $HEROKU_PROD
   
-  scp_deploy:
+scp_dark_deploy:
     docker:
       - image: circleci/node:14.15.3
     steps:
@@ -116,8 +116,41 @@ jobs:
             cf auth "$SCP_USER" "$SCP_PASSWORD"
             cf target -o "$SCP_ORG" -s "$SCP_SPACE"
       - run:
-          name: CF Deploy
-          command: cf push
+          name: CF dark deployment
+          command: |
+            cf push vocab_backend_green --no-start
+            cf bind-service vocab_backend_green vocab_db
+            cf env vocab_backend_blue | grep JWT_SECRET > temp_env
+            eval "$(grep ^JWT_SECRET= temp_env)"
+            rm temp_env
+            cf set-env vocab_backend_green JWT_SECRET $JWT_SECRET
+            cf start vocab_backend_green
+  
+scp_deploy_switch_and_cleanup:
+    docker:
+      - image: circleci/node:14.15.3
+    steps:
+      - run:
+          name: Setup CF CLI
+          command: |
+            sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
+            sudo dpkg -i cf-cli_amd64.deb
+            cf -v
+            cf api https://api.cf.eu10.hana.ondemand.com
+            cf auth "$SCP_USER" "$SCP_PASSWORD"
+            cf target -o "$SCP_ORG" -s "$SCP_SPACE"
+      - run:
+          name: Re-route trafic to updated app
+          command: |
+            cf map-route vocab_backend_green cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+            cf unmap-route vocab_backend_blue cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+      - run:
+          name: Delete old app and clean-up
+          command: |      
+            cf stop vocab_backend_blue
+            cf delete vocab_backend_blue -f
+            cf rename vocab_backend_green vocab_backend_blue
+            cf delete-route cfapps.eu10.hana.ondemand.com --hostname vocab_backend_green -f
           
 workflows:
   deploy:
@@ -145,7 +178,11 @@ workflows:
       - heroku_release_for_prod:
           requires:
             - heroku_deploy_to_prod
-      - scp_deploy:
+      - scp_dark_deploy:
           requires:
             - approve_for_prod
+          context: vocab
+      - scp_deploy_switch_and_cleanup:
+          requires:
+            - scp_dark_deploy
           context: vocab
