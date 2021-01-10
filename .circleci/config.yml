@@ -122,9 +122,11 @@ jobs:
             cf bind-service vocab_backend_green vocab_db
             cf env vocab_backend_blue | grep JWT_SECRET > temp_env
             cat temp_env
+            sed -i -e 's/: /=/g' temp_env
+            cat temp_env
             eval "$(grep ^JWT_SECRET= temp_env)"
             echo $JWT_SECRET
-            rm temp_env
+            rm temp_env*
             cf set-env vocab_backend_green JWT_SECRET $JWT_SECRET
             cf start vocab_backend_green
   
