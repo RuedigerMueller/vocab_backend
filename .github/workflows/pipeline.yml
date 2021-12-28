@@ -1,0 +1,5 @@
+name: Backend Pipeline
+
+on: [push]
+
+jobs:
