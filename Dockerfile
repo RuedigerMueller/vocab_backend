@@ -10,6 +10,7 @@ FROM node:14.15.3-alpine
 WORKDIR /usr/src/app
 COPY --from=nodebuild /usr/src/app/dist/ ./dist
 COPY package*.json ./
-RUN npm install --only=prod
+#RUN npm install --only=prod
+RUN npm install
 EXPOSE 3000
 CMD npm run-script start
