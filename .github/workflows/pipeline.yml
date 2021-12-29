@@ -49,7 +49,7 @@ jobs:
           docker pull ruedigermueller/vocab_backend:undertest
           docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
           docker push registry.heroku.com/vocabbetest/web
-          heroku container:release web --app vocabbetest
+          HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbetest
       
 #      - name: Install Heroku CLI (If not installed)
 #        run: |
