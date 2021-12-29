@@ -24,6 +24,10 @@ jobs:
   promote_to_SAPBTP:
     runs-on: ubuntu-latest
     steps: 
+    - name: Setup Cloud Foundry CLI
+      run: |
+            sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
+            sudo dpkg -i cf-cli_amd64.deb
     - name: Cloud Foundry dark deployment
       run: |
             cf -v
