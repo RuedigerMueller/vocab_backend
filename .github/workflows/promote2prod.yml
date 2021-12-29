@@ -43,12 +43,14 @@ jobs:
     - name: Re-route trafic to updated app
       run: |
             cf map-route vocab_backend_green cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+    - name: Unmap route to blue app and delete it
+      run: |
             cf unmap-route vocab_backend_blue cfapps.eu10.hana.ondemand.com --hostname vocab_backend
-      continue-on-error: true
-    - name: Delete old app and clean-up
-      run: |      
             cf stop vocab_backend_blue
             cf delete vocab_backend_blue -f
+      continue-on-error: true
+    - name: Rename green app and delete temporary route
+      run: |   
             cf rename vocab_backend_green vocab_backend_blue
             cf delete-route cfapps.eu10.hana.ondemand.com --hostname vocab_backend_green -f
-      continue-on-error: true
+      
