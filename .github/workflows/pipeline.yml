@@ -43,7 +43,7 @@ jobs:
     needs: [build_docker_image]
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Heroku
+      - name: Pull image from Docker Hub, deploy and release on Heroku
         run: |
           echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
           docker pull ruedigermueller/vocab_backend:undertest
