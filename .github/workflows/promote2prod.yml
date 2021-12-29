@@ -24,6 +24,8 @@ jobs:
   promote_to_SAPBTP:
     runs-on: ubuntu-latest
     steps: 
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Setup Cloud Foundry CLI
       run: |
             sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
@@ -36,5 +38,5 @@ jobs:
             cf target -o "${{ secrets.SCP_ORG }}" -s "${{ secrets.SCP_SPACE }}"
             cf push vocab_backend_green --no-start
             cf bind-service vocab_backend_green vocab_db
-            cf set-env vocab_backend_green JWT_SECRET "$JWT_SECRET"
+            cf set-env vocab_backend_green JWT_SECRET "${{ secrets.JWT_SECRET }}"
             cf start vocab_backend_green
