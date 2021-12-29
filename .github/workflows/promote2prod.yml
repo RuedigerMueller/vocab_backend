@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 jobs:
-  promoto_to_heroku:
+  promoto_to_Heroku:
     runs-on: ubuntu-latest
     steps:
       - name: Login to DockerHub
@@ -21,16 +21,16 @@ jobs:
             docker tag ruedigermueller/vocab_backend:released registry.heroku.com/vocabbeprod/web
             docker push registry.heroku.com/vocabbeprod/web
             HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbeprod
-  promote_to_SAPBTP:
+  promote_to_SAP_BTP:
     runs-on: ubuntu-latest
     steps: 
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Cloud Foundry CLI
+    - name: Install Cloud Foundry CLI
       run: |
             sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
             sudo dpkg -i cf-cli_amd64.deb
-    - name: Cloud Foundry dark deployment
+    - name: Deploy to Cloud Foundry in dark mode
       run: |
             cf -v
             cf api https://api.cf.eu10.hana.ondemand.com
@@ -40,3 +40,13 @@ jobs:
             cf bind-service vocab_backend_green vocab_db
             cf set-env vocab_backend_green JWT_SECRET "${{ secrets.JWT_SECRET }}"
             cf start vocab_backend_green
+    - name: Re-route trafic to updated app
+      run: |
+            cf map-route vocab_backend_green cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+            cf unmap-route vocab_backend_blue cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+    - name: Delete old app and clean-up
+      run: |      
+            cf stop vocab_backend_blue
+            cf delete vocab_backend_blue -f
+            cf rename vocab_backend_green vocab_backend_blue
+            cf delete-route cfapps.eu10.hana.ondemand.com --hostname vocab_backend_green -f
