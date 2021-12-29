@@ -50,7 +50,8 @@ jobs:
           tags: |
            ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest
           # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
+          #push: ${{ github.ref == 'refs/heads/main' }}
+          push: true
           #cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache
           #cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache,mode=max
 
