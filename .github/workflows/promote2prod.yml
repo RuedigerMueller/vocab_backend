@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 jobs:
-  promoto_heroku:
+  promoto_to_heroku:
     runs-on: ubuntu-latest
     steps:
       - name: Login to DockerHub
@@ -21,3 +21,16 @@ jobs:
             docker tag ruedigermueller/vocab_backend:released registry.heroku.com/vocabbeprod/web
             docker push registry.heroku.com/vocabbeprod/web
             HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbeprod
+  promote_to_SAPBTP:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Cloud Foundry dark deployment
+      run: |
+            cf -v
+            cf api https://api.cf.eu10.hana.ondemand.com
+            cf auth "${{ secrets.SCP_USER }}" "${{ secrets.SCP_PASSWORD }}"
+            cf target -o "${{ secrets.SCP_ORG }}" -s "${{ secrets.SCP_SPACE }}"
+            cf push vocab_backend_green --no-start
+            cf bind-service vocab_backend_green vocab_db
+            cf set-env vocab_backend_green JWT_SECRET "$JWT_SECRET"
+            cf start vocab_backend_green
