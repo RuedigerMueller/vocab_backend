@@ -50,7 +50,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             // Original
             // extra: '{ "ssl": true, "rejectUnauthorized": true }',
             
-            //ssl: true,
+            ssl: true,
             //extra: '{ "rejectUnauthorized": true } }'
             extra: '{ "ssl": true, "rejectUnauthorized": false }',
          };
