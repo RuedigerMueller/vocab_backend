@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Deploy to Heroku
         run: |
-          # echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+          echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
           docker pull ruedigermueller/vocab_backend:undertest
           docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
           docker push registry.heroku.com/vocabbetest/web
