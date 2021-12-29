@@ -3,26 +3,7 @@ name: Backend build and test pipeline
 on:
   workflow_dispatch
 
-jobs:
-#  install_and_test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#      - name: Use Node.js
-#        uses: actions/setup-node@v2
-#        with:
-#          node-version: '14'
-#          cache: npm
-#      - name: Install
-#        run: npm ci
-#        env:
-#          CI: true
-#      - name: Test
-#        run: npm test
-#        env:
-#          CI: true
-  
+jobs: 
   docker_build:
     runs-on: ubuntu-latest
     steps:
@@ -45,15 +26,29 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./
           file: ./Dockerfile
-          #builder: ${{ steps.buildx.outputs.name }}
+          builder: ${{ steps.buildx.outputs.name }}
           # Note: tags has to be all lower-case
           tags: |
            ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest
           # build on feature branches, push only on main branch
           #push: ${{ github.ref == 'refs/heads/main' }}
           push: true
-          #cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache
-          #cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache,mode=max
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  heroku_deploy_to_test:
+    needs: [docker_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Heroku
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+          docker pull ruedigermueller/vocab_backend:undertest
+          docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
+          docker push registry.heroku.com/vocabbetest/web
+
+      
+    
