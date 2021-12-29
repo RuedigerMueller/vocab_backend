@@ -49,6 +49,13 @@ jobs:
           docker pull ruedigermueller/vocab_backend:undertest
           docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
           docker push registry.heroku.com/vocabbetest/web
-
       
-    
+      - name: Install Heroku CLI (If not installed)
+        run: |
+            if [[ $(command -v heroku) == "" ]]; then
+              curl https://cli-assets.heroku.com/install.sh | sh
+            else
+              echo "Heroku is already installed. No operation was performed."
+            fi
+      - name: Release on Heroku test environment
+        run: heroku container:release web --app $HEROKU_TEST
