@@ -49,8 +49,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             migrations: ['migration/*.js'],
             // Original
             // extra: '{ "ssl": true, "rejectUnauthorized": true }',
-            ssl: true,
-            extra: '{ "rejectUnauthorized": true } }'
+            
+            //ssl: true,
+            //extra: '{ "rejectUnauthorized": true } }'
+            extra: '{ "ssl": true, "rejectUnauthorized": false }',
          };
       }
 
