@@ -38,3 +38,22 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  heroku_deploy_to_test:
+    needs: [docker_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Deploy to Heroku
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+          docker pull ruedigermueller/vocab_backend:undertest
+          docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
+          docker push registry.heroku.com/vocabbetest/web
+
+      
+    
