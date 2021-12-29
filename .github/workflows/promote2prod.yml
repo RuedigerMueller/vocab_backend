@@ -1,0 +1,23 @@
+name: Promote tested build to production
+
+on:
+  workflow_dispatch
+
+jobs:
+  promoto_heroku:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Pull image from Docker Hub, tag it as released and deploy & release on Heroku prod space
+        run: |
+            docker pull ruedigermueller/vocab_backend:undertest
+            docker tag ruedigermueller/vocab_backend:undertest ruedigermueller/vocab_backend:released
+            docker push ruedigermueller/vocab_backend:released
+            echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+            docker tag ruedigermueller/vocab_backend:released registry.heroku.com/vocabbeprod/web
+            docker push registry.heroku.com/vocabbeprod/web
+            HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbeprod
