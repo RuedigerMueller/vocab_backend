@@ -1,7 +1,7 @@
 name: Build and deploy for manual test
 
 on:
-  workflow_dispatch
+  push
 
 jobs: 
   build_docker_image:
