@@ -37,7 +37,7 @@ jobs:
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:buildcache,mode=max
 
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo ${{ steps.build_docker_image.outputs.digest }}
 
   deploy_to_heroku_for_manual_test:
     needs: [build_docker_image]
