@@ -1,4 +1,4 @@
-FROM node:14.15.3-alpine as nodebuild
+FROM node:14.17.0-alpine as nodebuild
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install &&  \
@@ -6,7 +6,7 @@ RUN npm install &&  \
     npm run test
 
 
-FROM node:14.15.3-alpine
+FROM node:14.17.0-alpine
 WORKDIR /usr/src/app
 COPY --from=nodebuild /usr/src/app/dist/ ./dist
 COPY package*.json ./
