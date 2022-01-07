@@ -4,3 +4,5 @@ test.db
 .env
 .env_backup
 coverage
+.DS_Store
+src/.DS_Store
