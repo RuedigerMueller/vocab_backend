@@ -46,7 +46,7 @@ jobs:
       - name: Pull image from Docker Hub, deploy & release on Heroku test space
         run: |
           echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
-          docker pull ruedigermueller/vocab_backend:undertest
-          docker tag ruedigermueller/vocab_backend:undertest registry.heroku.com/vocabbetest/web
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest registry.heroku.com/vocabbetest/web
           docker push registry.heroku.com/vocabbetest/web
           HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbetest
