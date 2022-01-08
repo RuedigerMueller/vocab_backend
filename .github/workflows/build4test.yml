@@ -13,6 +13,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   
   deploy_to_heroku_for_manual_test:
+    needs: [build_and_push_docker_image]
     uses: RuedigerMueller/GitHubWorkflows/.github/workflows/deploy_to_heroku.yml@main
     with:
       DOCKERHUB_USERNAME: ruedigermueller
