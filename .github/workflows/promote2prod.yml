@@ -4,53 +4,70 @@ on:
   workflow_dispatch
 
 jobs:
-  promoto_to_Heroku:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Pull image from Docker Hub, tag it as released and deploy & release on Heroku prod space
-        run: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest
-            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released
-            echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
-            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released registry.heroku.com/vocabbeprod/web
-            docker push registry.heroku.com/vocabbeprod/web
-            HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbeprod
-  promote_to_SAP_BTP:
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install Cloud Foundry CLI
-      run: |
-            sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
-            sudo dpkg -i cf-cli_amd64.deb
-    - name: Deploy to Cloud Foundry in dark mode
-      run: |
-            cf -v
-            cf api https://api.cf.eu10.hana.ondemand.com
-            cf auth "${{ secrets.SCP_USER }}" "${{ secrets.SCP_PASSWORD }}"
-            cf target -o "${{ secrets.SCP_ORG }}" -s "${{ secrets.SCP_SPACE }}"
-            cf push vocab_backend_green --no-start
-            cf bind-service vocab_backend_green vocab_db
-            cf set-env vocab_backend_green JWT_SECRET "${{ secrets.JWT_SECRET }}"
-            cf start vocab_backend_green
-    - name: Re-route trafic to updated app
-      run: |
-            cf map-route vocab_backend_green cfapps.eu10.hana.ondemand.com --hostname vocab_backend
-    - name: Unmap route to blue app and delete it
-      run: |
-            cf unmap-route vocab_backend_blue cfapps.eu10.hana.ondemand.com --hostname vocab_backend
-            cf stop vocab_backend_blue
-            cf delete vocab_backend_blue -f
-      continue-on-error: true
-    - name: Rename green app and delete temporary route
-      run: |   
-            cf rename vocab_backend_green vocab_backend_blue
-            cf delete-route cfapps.eu10.hana.ondemand.com --hostname vocab_backend_green -f
+  promoto_to_prod:
+    uses: RuedigerMueller/GitHubWorkflows/.github/workflows/promote2prod.yml@main
+    with:
+      DOCKERHUB_USERNAME: ruedigermueller
+      DOCKERHUB_REPOSITORY: vocab_backend
+      HEROKU_REPOSITORY: vocabbetest
+      SCP_APP_NAME: vocab_backend
+      SCP_DB_NAME: vocab_db
+    secrets:
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      SCP_USER: ${{ secrets.SCP_USER }}
+      SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
+      SCP_ORG: ${{ secrets.SCP_ORG }}
+      SCP_SPACE: ${{ secrets.SCP_SPACE }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+  # promoto_to_Heroku:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Pull image from Docker Hub, tag it as released and deploy & release on Heroku prod space
+  #       run: |
+  #           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest
+  #           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:undertest ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released
+  #           docker push ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released
+  #           echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+  #           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab_backend:released registry.heroku.com/vocabbeprod/web
+  #           docker push registry.heroku.com/vocabbeprod/web
+  #           HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} heroku container:release web --app vocabbeprod
+  # promote_to_SAP_BTP:
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #   - name: Checkout code
+  #     uses: actions/checkout@v2
+  #   - name: Install Cloud Foundry CLI
+  #     run: |
+  #           sudo curl -v -L -o cf-cli_amd64.deb 'https://packages.cloudfoundry.org/stable?release=debian64&source=github&version=v7'
+  #           sudo dpkg -i cf-cli_amd64.deb
+  #   - name: Deploy to Cloud Foundry in dark mode
+  #     run: |
+  #           cf -v
+  #           cf api https://api.cf.eu10.hana.ondemand.com
+  #           cf auth "${{ secrets.SCP_USER }}" "${{ secrets.SCP_PASSWORD }}"
+  #           cf target -o "${{ secrets.SCP_ORG }}" -s "${{ secrets.SCP_SPACE }}"
+  #           cf push vocab_backend_green --no-start
+  #           cf bind-service vocab_backend_green vocab_db
+  #           cf set-env vocab_backend_green JWT_SECRET "${{ secrets.JWT_SECRET }}"
+  #           cf start vocab_backend_green
+  #   - name: Re-route trafic to updated app
+  #     run: |
+  #           cf map-route vocab_backend_green cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+  #   - name: Unmap route to blue app and delete it
+  #     run: |
+  #           cf unmap-route vocab_backend_blue cfapps.eu10.hana.ondemand.com --hostname vocab_backend
+  #           cf stop vocab_backend_blue
+  #           cf delete vocab_backend_blue -f
+  #     continue-on-error: true
+  #   - name: Rename green app and delete temporary route
+  #     run: |   
+  #           cf rename vocab_backend_green vocab_backend_blue
+  #           cf delete-route cfapps.eu10.hana.ondemand.com --hostname vocab_backend_green -f
       
