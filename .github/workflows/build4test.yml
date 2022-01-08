@@ -9,7 +9,6 @@ jobs:
     with:
       DOCKERHUB_USERNAME: ruedigermueller
       DOCKERHUB_REPOSITORY: vocab_backend
-      HEROKU_REPOSITORY: vocab_backend
     secrets:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   
