@@ -12,7 +12,6 @@ jobs:
       HEROKU_REPOSITORY: vocab_backend
     secrets:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-
   
   deploy_to_heroku_for_manual_test:
     uses: RuedigerMueller/GitHubWorkflows/.github/workflows/deploy_to_heroku.yml@main
