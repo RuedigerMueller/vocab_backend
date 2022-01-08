@@ -9,7 +9,7 @@ jobs:
     with:
       DOCKERHUB_USERNAME: ruedigermueller
       DOCKERHUB_REPOSITORY: vocab_backend
-      HEROKU_REPOSITORY: vocabbetest
+      HEROKU_REPOSITORY: vocabbeprod
       SCP_APP_NAME: vocab_backend
       SCP_DB_NAME: vocab_db
     secrets:
