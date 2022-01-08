@@ -19,4 +19,4 @@ jobs:
       SCP_PASSWORD: ${{ secrets.SCP_PASSWORD }}
       SCP_ORG: ${{ secrets.SCP_ORG }}
       SCP_SPACE: ${{ secrets.SCP_SPACE }}
-      #JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
