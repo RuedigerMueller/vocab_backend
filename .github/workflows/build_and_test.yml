@@ -1,7 +1,9 @@
 name: Build and test project
 
 on:
-  workflow_dispatch
+  push:
+    branches-ignore:
+      - master
 
 jobs:
   build_and_test:
