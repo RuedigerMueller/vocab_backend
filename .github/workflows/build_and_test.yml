@@ -1,0 +1,8 @@
+name: Build and test project
+
+on:
+  workflow_dispatch
+
+jobs:
+  build_and_test:
+    uses: RuedigerMueller/GitHubWorkflows/.github/workflows/build_and_test.yml@main
