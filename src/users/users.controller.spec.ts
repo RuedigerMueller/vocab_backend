@@ -32,13 +32,7 @@ describe('Users Controller', () => {
   describe('create', () => {
     it('should create a user', async () => {
       const expected_result: User = addUser_1;
-
-      const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser_1.username;
-      createUserDto.email = addUser_1.email;
-      createUserDto.firstName = addUser_1.firstName;
-      createUserDto.lastName = addUser_1.lastName;
-      createUserDto.password = addUser_1.password;
+      const createUserDto: CreateUserDto = addUser_1;
 
       await controller.create(createUserDto);
 
@@ -46,13 +40,8 @@ describe('Users Controller', () => {
     });
 
     it('should not create a user when data is missing', async () => {
-      const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser_2.username;
-      createUserDto.email = addUser_2.email;
-      createUserDto.firstName = addUser_2.firstName;
-      createUserDto.lastName = addUser_2.lastName;
-      createUserDto.password = addUser_2.password;
-
+      const createUserDto: CreateUserDto = addUser_2;
+      
       createUserDto.username = '';
       await expect(controller.create(createUserDto)).rejects.toThrow()
      
@@ -74,12 +63,8 @@ describe('Users Controller', () => {
     });
 
     it('should not create a user when e-mail is already taken', async () => {
-      const createUserDto: CreateUserDto = new CreateUserDto();
-      createUserDto.username = addUser_1.username;
+      const createUserDto: CreateUserDto = addUser_1;
       createUserDto.email = user_1.email;
-      createUserDto.firstName = addUser_1.firstName;
-      createUserDto.lastName = addUser_1.lastName;
-      createUserDto.password = addUser_1.password;
       await expect(controller.create(createUserDto)).rejects.toThrow()
     });
   });

@@ -110,11 +110,7 @@ describe('LessonsService', () => {
 
   describe('create', () => {
     it('should add the lesson to the repository', async () => {
-      const lesson_in: CreateLessonDto = {
-        title: addLesson.title,
-        language_a: addLesson.language_a,
-        language_b: addLesson.language_b,
-      };
+      const lesson_in: CreateLessonDto = addLesson;
 
       const result: Lesson = await service.create(lesson_in, lessonUser_1);
 
@@ -148,11 +144,7 @@ describe('LessonsService', () => {
     };
 
     it('should update the lesson', async () => {
-      const lesson_in: UpdateLessonDto = {
-        title: updateLesson.title,
-        language_a: updateLesson.language_a,
-        language_b: updateLesson.language_b,
-      };
+      const lesson_in: UpdateLessonDto = updateLesson;
 
       await service.update(updateLesson.id.toString(), lesson_in, lessonUser_1);
       updateCheck();
@@ -160,17 +152,11 @@ describe('LessonsService', () => {
 
     it('should not update a valid ID but from different user', async () => {
       const lesson_before: Lesson = await service.findOne(updateLesson.id.toString(), lessonUser_1);
-
-      const lesson_in: UpdateLessonDto = {
-        title: updateLesson.title,
-        language_a: updateLesson.language_a,
-        language_b: updateLesson.language_b,
-      };
+      const lesson_in: UpdateLessonDto = updateLesson;
 
       await service.update(updateLesson.id.toString(), lesson_in, lessonUser_2);
 
       const lesson_after: Lesson = await service.findOne(updateLesson.id.toString(), lessonUser_1);
-
       expect(lesson_before).toEqual(lesson_after);
     });
 

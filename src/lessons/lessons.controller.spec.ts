@@ -117,11 +117,7 @@ describe('Lessons Controller', () => {
 
   describe('create', () => {
     it('should add the lesson to the repository', async () => {
-      const lesson: CreateLessonDto = {
-        title: addLesson.title,
-        language_a: addLesson.language_a,
-        language_b: addLesson.language_a,
-      };
+      const lesson: CreateLessonDto = addLesson;
 
       await controller.create(request, lesson);
 
@@ -149,32 +145,20 @@ describe('Lessons Controller', () => {
     };
 
     it('should update the lesson', async () => {
-      const lesson: UpdateLessonDto = {
-        title: updateLesson.title,
-        language_a: updateLesson.language_a,
-        language_b: updateLesson.language_b,
-      };
-
+      const lesson: UpdateLessonDto = updateLesson;
       await controller.update(request, updateLesson.id.toString(), lesson);
       updateCheck();
     });
 
     it('should not update a valid ID but from different user', async () => {
       const lesson_before: Lesson = await controller.findOne(request, updateLesson.id.toString());
-
-      const lesson_in: UpdateLessonDto = {
-        title: updateLesson.title,
-        language_a: updateLesson.language_a,
-        language_b: updateLesson.language_b,
-      };
-
+      const lesson_in: UpdateLessonDto = updateLesson;
       const request_user_2 = new http.IncomingMessage();
       request_user_2.user = lessonUser_2;
 
       await controller.update(request_user_2, updateLesson.id.toString(), lesson_in);
 
       const lesson_after: Lesson = await controller.findOne(request, updateLesson.id.toString());
-
       expect(lesson_before).toEqual(lesson_after);
     });
 
