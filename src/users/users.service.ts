@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
@@ -28,13 +28,7 @@ export class UsersService {
       throw new Error(`User with email already exists`);
     }
     
-    const user: User = new User();
-
-    user.username = createUserDto.username;
-    user.password = createUserDto.password;
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
-    user.email = createUserDto.email;
+    const user: Partial<User> = createUserDto;
 
     return await this._userRepository.save(user);
   }

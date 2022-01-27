@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AppConfigurationService } from '../app-configuration/app-configuration.service';
 import { LessonsService } from '../lessons/lessons.service';
+import { User } from '../users/user.entity';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
 import { Vocabulary } from './vocabulary.entity';
-import { AppConfigurationService } from '../app-configuration/app-configuration.service';
-import { User } from '../users/user.entity';
 
 @Injectable()
 export class VocabularyService {
@@ -44,7 +44,6 @@ export class VocabularyService {
     vocabulary.language_b = createVocabularyDto.language_b;
     vocabulary.level = 1;
     vocabulary.dueDate = new Date();
-    // vocabulary.dueDate = new Date(2021,12,30);
     vocabulary.dueDate.setHours(0, 0, 0, 0);
     vocabulary.lesson = await this._lessonsService.findOne(
       createVocabularyDto.lesson.toString(),
