@@ -7,7 +7,7 @@ on:
 
 jobs: 
   build_and_push_docker_image:
-    uses: RuedigerMueller/GitHubWorkflows/.github/workflows/build_and_push.yml@main
+    uses: RuedigerMueller/GitHubWorkflows/.github/workflows/build_and_optionally_push.yml@main
     with:
       DOCKERHUB_USERNAME: ruedigermueller
       DOCKERHUB_REPOSITORY: vocab_backend
